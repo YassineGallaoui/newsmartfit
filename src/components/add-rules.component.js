@@ -319,7 +319,7 @@ Do you want to automatically set name?`)) {
                     }
                 }
                 if(numberRule===-1) numberRule=0
-                let nuovoNome="Automatically_Rule_Name_"+numberRule;
+                let nuovoNome="Automatic_Rule_Name_"+numberRule;
                 this.state.name=nuovoNome; //IL METODO THIS.SETSTATE PER QUALCHE MOTIVO NON FUNZIONA!!! DA RISOLVERE POSSIBILMENTE!
                 console.log("il nome è: "+this.state.name);
                         

@@ -34,6 +34,7 @@ app.use('/athletes', athleteRouter);
 app.use('/rules', rulesRouter);
 app.get('*', function (request, response){
     response.sendFile(path.resolve(buildPath, 'index.html'))
+    console.log("sono entrato dentro la funzione speciale!!")
   })
 if(process.env.NODE_ENV === "production"){
     app.use(express.static('build'))
