@@ -67,7 +67,7 @@ export default class RulesList extends Component {
     }
 
     componentDidMount() {
-        axios.get('/rules/')
+        axios.get('/rules')
             .then(response => {
                 this.setState({ rules: response.data });
                 window.collapsibleDivs();

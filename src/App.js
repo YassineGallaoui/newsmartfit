@@ -28,10 +28,6 @@ function App() {
           <Route path="/rules/update/:id" exact component={UpdateRule}/>
           <Route path="/rules" exact component={Rules}/>
           <Route path="/:id" component={DetailsAthlete}/>
-          {//NEL CASO SERVISSERO...
-          /*<Route path="/create" component={CreateAthletes}/>
-          <Route path="/edit" component={EditAthletes}/>
-          */}
         </Switch>
         
       </HashRouter>
