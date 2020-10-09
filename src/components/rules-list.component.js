@@ -59,7 +59,6 @@ export default class RulesList extends Component {
     constructor(props) {
         super(props);
         this.deleteRule = this.deleteRule.bind(this);
-        this.editRule = this.editRule.bind(this);
         this.state = { 
             rules: [],
             athletes: []
@@ -97,21 +96,9 @@ export default class RulesList extends Component {
             })
     }
 
-    editRule(id) {
-        axios.post('/rules/update/'+id)
-            .then(response => {
-                this.setState({
-                    rules: this.state.rules.filter(el =>el._id !==id)
-                })
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
-
     rulesList() {
         return this.state.rules.map(currentrule => {
-            return <RuleBigDiv rule={currentrule} athletes={this.state.athletes} key={currentrule._id} delete={this.deleteRule} edit={this.editRule}></RuleBigDiv>;
+            return <RuleBigDiv rule={currentrule} athletes={this.state.athletes} key={currentrule._id} delete={this.deleteRule}></RuleBigDiv>;
         })
     }
 
