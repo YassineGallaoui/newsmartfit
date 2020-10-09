@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusSquare, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
-import {browserHistory} from "react-router";
 let exampleText=`You should:
         - first tip
         - second tip
@@ -311,7 +310,6 @@ Do you want to automatically set name?`)) {
                 .then(res => {
                     console.log("Rule updated"+res.data);
                     alert("Rule updated!");
-                    browserHistory.push("/rules");
                 })
               } else {//ALTRIMENTI ESCO COSÌ L'UTENTE PUÒ SETTARE IL NOME CHE VUOLE
                 return;
