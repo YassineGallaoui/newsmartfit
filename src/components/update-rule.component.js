@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {browserHistory} from "react-router";
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusSquare, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
@@ -327,7 +326,6 @@ Do you want to automatically set name?`)) {
             .then(res => {
                 console.log("Rule updated"+res.data);
                 alert("Rule updated!");
-                browserHistory.push("/rules/");
             })
         }
         
