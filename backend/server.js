@@ -35,6 +35,8 @@ app.use('/rules', rulesRouter);
 app.get('*', function (request, response){
     response.sendFile(path.resolve(buildPath, 'index.html'))
     console.log("sono entrato dentro la funzione speciale!!")
+    console.log("richiesta: "+request)
+    console.log("risposta: "+response)
   })
 if(process.env.NODE_ENV === "production"){
     app.use(express.static('build'))

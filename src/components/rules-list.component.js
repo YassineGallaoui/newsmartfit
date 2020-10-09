@@ -59,7 +59,7 @@ export default class RulesList extends Component {
     constructor(props) {
         super(props);
         this.deleteRule = this.deleteRule.bind(this);
-        this.state = { 
+        this.state = {
             rules: [],
             athletes: []
         };
@@ -75,7 +75,7 @@ export default class RulesList extends Component {
                 console.log(error);
             })
         
-            axios.get('/athletes/')
+        axios.get('/athletes/')
             .then(response => {
                 this.setState({ athletes: response.data });
             })

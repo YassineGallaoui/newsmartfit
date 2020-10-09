@@ -9,6 +9,7 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: '+err));
 })
 
+
 //QUANDO VISUALIZZO UNA SINGOLO REGOLA... non dovrebbe servire
 router.route('/:id').get((req,res) => {
     Rules.findById(req.params.id)
@@ -67,11 +68,7 @@ module.exports = router;
 // AGGIUNTA DI ATLETI
 // ---> DA VERIFICARE SE QUESTA FUNZIONALITÀ È NECESSARIA
 
-// ---> DA VERIFICARE SE QUESTA FUNZIONALITÀ È NECESSARIA
-/*  */
-
+// ---> DA VERIFICARE SE QUESTA FUNZIONALITÀ È NECESSARI
 
 // QUANDO SI VOGLIONO MODIFICARE LE INFORMAZIONI DI UN SINGOLO ATLETA
 // ---> DA VERIFICARE SE QUESTA FUNZIONALITÀ È NECESSARIA
-/*  */
-
