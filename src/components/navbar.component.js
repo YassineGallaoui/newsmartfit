@@ -15,7 +15,7 @@ export default class Navbar extends Component{
                             <Link to="/" className="nav-link">Athletes List <span className="sr-only">(current)</span></Link>
                         </li>
                         <li className="nav-item">
-                            <Link to ="/rules" className="nav-link">View Rules</Link>
+                            <Link to ="/rules/" className="nav-link">View Rules</Link>
                         </li>
                     </ul>
                 </div>
