@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusSquare, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import {browserHistory} from "react-router";
 let exampleText=`You should:
         - first tip
         - second tip
@@ -277,7 +278,9 @@ export default class UpdateRule extends Component{
             console.log("nessuna rule settata");
         }
 
-        if(this.state.name===""){ //SE IL NOME NON È GIÀ SETTATO
+        //SE IL NOME NON È GIÀ SETTATO
+        if(this.state.name===""){
+            //SE VOGLIO CHE VENGA SETTATO UN NOME GENERATO AUTOMATICAMENTE
             if (window.confirm(`Name not setted. 
 Do you want to automatically set name?`)) {
                 let arrRules=[...this.state.alreadyExistingRules]
@@ -308,11 +311,13 @@ Do you want to automatically set name?`)) {
                 .then(res => {
                     console.log("Rule updated"+res.data);
                     alert("Rule updated!");
+                    browserHistory.push("/rules");
                 })
-              } else {
+              } else {//ALTRIMENTI ESCO COSÌ L'UTENTE PUÒ SETTARE IL NOME CHE VUOLE
                 return;
               }
-        } else {    //SE IL NOME È GIÀ SETTATO
+        } else {
+            //SE IL NOME È GIÀ SETTATO
             const rule = {
                 name: this.state.name,
                 athletesId: this.state.athletesId,

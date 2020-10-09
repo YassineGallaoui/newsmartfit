@@ -11,7 +11,7 @@ const RuleBigDiv = props => (
                     <div className="card-body">
                         <div className="card-text">
                             <button type="button" className="btn btn-outline-danger float-right ml-3 mb-3" onClick={() => {if(window.confirm('Sure you want to delete this rule?')) props.delete(props.rule._id)}}>Delete Rule</button>
-                            <Link to={"rules/update/"+props.rule._id}><button type="button" className="btn btn-outline-warning float-right">Edit Rule</button></Link>
+                            <Link to={"/rules/update"+props.rule._id}><button type="button" className="btn btn-outline-warning float-right">Edit Rule</button></Link>
                             <div className="row">
                                 <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                                     <h6><label>Conditions</label></h6>
