@@ -1,6 +1,6 @@
 const router = require('express').Router();
 let Athlete = require('../models/athlet.model');
-const athlet = require('../models/athlet.model');
+const athlete = require('../models/athlet.model');
 
 //QUANDO VOGLIO VISUALIZZARE LA LISTA DI ATLETI
 router.route('/').get((req, res) => {
