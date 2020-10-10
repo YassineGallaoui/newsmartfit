@@ -9,7 +9,12 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;  //PORTA SU CUI ABBIAMO IL SERVER, SE NON NE ABBIAMO UNA DI DEFAULT PRENDE LA 5000
 const buildPath = path.join(__dirname, '..', 'build');
+
+
+// QUA SETTIAMO IL NOSTRO MIDDLEWARE
+app.use(express.json());
 app.use(express.static(buildPath));
+app.use(express.urlencoded({ extended: false}));
 
 
 //MONGODB E MONGOOSE
@@ -21,21 +26,16 @@ connection.once('open', () =>{
 })
 
 
-// QUA SETTIAMO IL NOSTRO MIDDLEWARE
-app.use(express.json());
-app.use(express.static(buildPath));
-app.use(express.urlencoded({ extended: false}));
-
-
 //HTTP REQUEST LOGGER
 const athleteRouter = require('./routes/athletes'); //DEFINISCO QUALE È LA SORGENTE DEL ROUTER DELLA SEZIONE ATLETI
 const rulesRouter = require('./routes/rules'); //DEFINISCO QUALE È LA SORGENTE DEL ROUTER DELLA SEZIONE ATLETI
-app.use('/athletes', athleteRouter);
 app.use('/rules', rulesRouter);
+app.use('/', athleteRouter);
 app.get('*', function (request, response){
     response.sendFile(path.resolve(buildPath, 'index.html'))
     console.log("sono entrato dentro la funzione speciale!!")
   })
+
 
 // METTIAMO IL SERVER IN ASCOLTO SULLA PORTA CHE ABBIAMO SCELTO
 app.listen(port, ()=>{
