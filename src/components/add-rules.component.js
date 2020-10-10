@@ -18,11 +18,11 @@ export default class AddRules extends Component{
         this.onRemoveCondition = this.onRemoveCondition.bind(this);
         this.onChangeName = this.onChangeName.bind(this);
         this.onChangeMessage = this.onChangeMessage.bind(this);
-        this.onChangeType = this.onChangeType.bind(this);
-        this.onChangeOperator = this.onChangeOperator.bind(this);
-        this.onChangeValue1Condition = this.onChangeValue1Condition.bind(this);
-        this.onChangeValue2Condition = this.onChangeValue2Condition.bind(this);
-        this.onChangelink = this.onChangelink.bind(this);
+            this.onChangeType = this.onChangeType.bind(this);
+            this.onChangeOperator = this.onChangeOperator.bind(this);
+            this.onChangeValue1Condition = this.onChangeValue1Condition.bind(this);
+            this.onChangeValue2Condition = this.onChangeValue2Condition.bind(this);
+            this.onChangelink = this.onChangelink.bind(this);
         //this.filterAthletes = this.filterAthletes.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
@@ -280,7 +280,7 @@ export default class AddRules extends Component{
     }
 
     onSubmit(e){
-        /* e.preventDefault();
+        e.preventDefault();
 
         try {
             let conditions = [...this.state.conditions];
@@ -356,7 +356,7 @@ Do you want to automatically set name?`)) {
             
             alert("Rule added!");
             console.log("il nome è: "+this.state.name);
-        } */
+        }
     }
 
     render() {
