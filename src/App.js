@@ -23,11 +23,11 @@ function App() {
         <Navbar></Navbar>
         <br/>
         <Switch>
-          <Route exact path="/" component={AthletesList}/>
           <Route exact path="/rules/add" component={AddRules}/>
           <Route exact path="/rules/update/:id" component={UpdateRule}/>
           <Route exact path="/rules" component={RulesList}/>
           <Route exact path="/:id" component={DetailsAthlete}/>
+          <Route exact path="/" component={AthletesList}/>
         </Switch>
         
       </HashRouter>
