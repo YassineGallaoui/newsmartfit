@@ -183,9 +183,9 @@ export default class AddRules extends Component{
         if (prevState.conditions !== this.state.conditions) {
             this.filterAthletes();
         }
-      } */
+      }
 
-/*     filterAthletes(){
+    filterAthletes(){
         console.log("sono dentro la funzione")
         //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
         let condizioni=this.state.conditions;
@@ -280,7 +280,7 @@ export default class AddRules extends Component{
     }
 
     onSubmit(e){
-        e.preventDefault();
+        /* e.preventDefault();
 
         try {
             let conditions = [...this.state.conditions];
@@ -356,7 +356,7 @@ Do you want to automatically set name?`)) {
             
             alert("Rule added!");
             console.log("il nome è: "+this.state.name);
-        }
+        } */
     }
 
     render() {
