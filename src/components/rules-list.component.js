@@ -84,7 +84,7 @@ export default class RulesList extends Component {
             })
     }
 
-    /* deleteRule(id) {
+/*     deleteRule(id) {
         axios.delete('/rules/'+id)
             .then(response => {console.log("Rule "+id+" eliminated");
                 this.setState({
@@ -93,10 +93,10 @@ export default class RulesList extends Component {
             })
             .catch((error) => {
                 console.log(error);
-            }) */
-    }
+            })
+    } */
 
-    /* rulesList() {
+/*     rulesList() {
         return this.state.rules.map(currentrule => {
             return <RuleBigDiv rule={currentrule} athletes={this.state.athletes} key={currentrule._id} delete={this.deleteRule}></RuleBigDiv>;
         })
