@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
+import axios from 'axios';
 import Chart from "./charts.component"
 import Emoji from 'a11y-react-emoji';
 
@@ -38,7 +38,7 @@ export default class DetailsAthlete extends Component {
     }
 
     componentDidMount() {
-        Axios.get('/athletes/' + this.props.match.params.id)
+        axios.get('/athletes/' + this.props.match.params.id)
             .then(response => {
                 this.setState({
                     id: response.data._id,

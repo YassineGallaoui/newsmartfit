@@ -29,7 +29,6 @@ router.route('/').get((req, res) => {
 
 
 
-
 // RIMOZIONE DI UNA SINGOLO REGOLA
 router.route('/:id').delete((req,res) => {
     Rules.findByIdAndDelete(req.params.id)
