@@ -332,7 +332,7 @@ Do you want to automatically set name?`)) {
 
                 console.log(rule);
                 
-                axios.post('/rules/add', rule)
+                axios.post('/rules/add/', rule)
                 .then(res => console.log(res.data))
                 
                 alert("Rule added!");
@@ -351,7 +351,7 @@ Do you want to automatically set name?`)) {
 
             console.log(rule);
             
-            axios.post('/rules/add', rule)
+            axios.post('/rules/add/', rule)
             .then(res => console.log(res.data))
             
             alert("Rule added!");
