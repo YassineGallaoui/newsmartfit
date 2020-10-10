@@ -32,10 +32,10 @@ const athleteRouter = require('./routes/athletes'); //DEFINISCO QUALE È LA SORG
 const rulesRouter = require('./routes/rules'); //DEFINISCO QUALE È LA SORGENTE DEL ROUTER DELLA SEZIONE ATLETI
 app.use('/athletes', athleteRouter);
 app.use('/rules', rulesRouter);
-/* app.get('/*', function (request, response){
+app.get('/*', function (request, response){
     response.sendFile(path.resolve(buildPath, 'index.html'))
     console.log("sono entrato dentro la funzione speciale!!")
-  }) */
+  })
 
 // METTIAMO IL SERVER IN ASCOLTO SULLA PORTA CHE ABBIAMO SCELTO
 app.listen(port, ()=>{
