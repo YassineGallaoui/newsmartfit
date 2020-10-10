@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as HashRouter, Switch, Route} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"
 
 
@@ -10,15 +10,11 @@ import DetailsAthlete from "./components/details-athlete.component"
 import RulesList from "./components/rules-list.component"
 import AddRules from "./components/add-rules.component"
 import UpdateRule from "./components/update-rule.component"
-/* import CreateAthletes from "./components/create-athletes.component"
-import DeleteAthletes from "./components/delete-athletes.component" 
-import EditAthletes from "./components/edit-athletes.component"
-*/
 
 
 function App() {
   return (
-      <HashRouter>
+      <Router>
         <Header></Header>
         <Navbar></Navbar>
         <br/>
@@ -30,7 +26,7 @@ function App() {
           <Route exact path="/" component={AthletesList}/>
         </Switch>
         
-      </HashRouter>
+      </Router>
   );
 }
 
