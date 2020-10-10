@@ -25,7 +25,6 @@ function App() {
           <Route exact path="/:id" component={DetailsAthlete}/>
           <Route exact path="/" component={AthletesList}/>
         </Switch>
-        
       </Router>
   );
 }
