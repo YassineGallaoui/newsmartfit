@@ -69,6 +69,7 @@ export default class RulesList extends Component {
         axios.get('/rules/')
             .then(response => {
                 this.setState({ rules: response.data });
+                console.log("BONJOOOOOOOOOOOOOOOOOOOOOOUR");
                 window.collapsibleDivs();
             })
             .catch((error) => {
@@ -78,6 +79,7 @@ export default class RulesList extends Component {
         axios.get('/athletes/')
             .then(response => {
                 this.setState({ athletes: response.data });
+                console.log("BONJOUUUUUUUUUUUUUUUUUUUUUUR");
             })
             .catch((error) => {
                 console.log(error);
