@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const RuleBigDiv = props => (
+/* const RuleBigDiv = props => (
     <div className="row">
         <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 my-3">
             <div className="card">
@@ -52,7 +52,7 @@ const RuleBigDiv = props => (
             </div>
         </div>
     </div>
-)
+) */
 
 export default class RulesList extends Component {
 
@@ -69,7 +69,7 @@ export default class RulesList extends Component {
         axios.get('/rules/')
             .then(response => {
                 this.setState({ rules: response.data });
-                window.collapsibleDivs();
+                /* window.collapsibleDivs(); */
             })
             .catch((error) => {
                 console.log(error);
@@ -84,7 +84,7 @@ export default class RulesList extends Component {
             })
     }
 
-    deleteRule(id) {
+    /* deleteRule(id) {
         axios.delete('/rules/'+id)
             .then(response => {console.log("Rule "+id+" eliminated");
                 this.setState({
@@ -93,23 +93,24 @@ export default class RulesList extends Component {
             })
             .catch((error) => {
                 console.log(error);
-            })
+            }) */
     }
 
-    rulesList() {
+    /* rulesList() {
         return this.state.rules.map(currentrule => {
             return <RuleBigDiv rule={currentrule} athletes={this.state.athletes} key={currentrule._id} delete={this.deleteRule}></RuleBigDiv>;
         })
-    }
+    } */
 
     render() {
         return (
             <div>
                 <h2>
                     Your Rules
-                    <Link to="/rules/add" className="nav-link"><button type="button" className="float-right btn btn-outline-primary">New rule</button></Link>
+                    <Link to="/rules/add"><button type="button" className="float-right btn btn-outline-primary">New rule</button></Link>
                 </h2>
-                    {this.rulesList()}
+                    ciao
+                    {/* {this.rulesList()} */}
             </div>
         )
     }
