@@ -8,7 +8,7 @@ let exampleText=`You should:
         - ...
         `
 
-export default class AddRules extends Component{
+export default class AddRule extends Component{
     constructor(props){
         super(props);
 

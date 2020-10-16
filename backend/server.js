@@ -28,10 +28,10 @@ connection.once('open', () =>{
 
 //HTTP REQUEST LOGGER
 const athleteRouter = require('./routes/athletes'); //DEFINISCO QUALE È LA SORGENTE DEL ROUTER DELLA SEZIONE ATLETI
-const rulesRouter = require('./routes/rules'); //DEFINISCO QUALE È LA SORGENTE DEL ROUTER DELLA SEZIONE ATLETI
+const rulesRouter = require('./routes/rules'); //DEFINISCO QUALE È LA SORGENTE DEL ROUTER DELLA SEZIONE RULES
 app.use('/athletes', athleteRouter);
 app.use('/rules', rulesRouter);
-app.get('*', function (request, response){
+app.use('*', function (request, response){
     response.sendFile(path.resolve(buildPath, 'index.html'))
     console.log("sono entrato dentro la funzione speciale!!")
   })

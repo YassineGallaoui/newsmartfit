@@ -1,11 +1,11 @@
 const router = require('express').Router();
 let Rules = require('../models/rule.model');
-const rule = require('../models/rule.model');
+//const rules = require('../models/rule.model');
 
 //QUANDO VOGLIO VISUALIZZARE LA LISTA DI RULES
 router.route('/').get((req, res) => {
     Rules.find()
-    .then(rule => res.json(rule))
+    .then(rules => res.json(rules))
     .catch(err => res.status(400).json('Error: '+err));
 })
 
@@ -15,7 +15,7 @@ router.route('/').get((req, res) => {
     const name = req.body.name;
     const message = req.body.message;
     const conditions = req.body.conditions;
-    const newRule = new rule({
+    const newRule = new Rules({
         name,
         athletesId,
         conditions,
@@ -40,13 +40,13 @@ router.route('/:id').delete((req,res) => {
 // QUANDO SI VOGLIONO MODIFICARE LE INFORMAZIONI DI UNA SINGOLA REGOLA
 router.route('/update/:id').post((req,res) => {
     Rules.findById(req.params.id)
-    .then(rule => {
-        rule.athletesId = req.body.athletesId;
-        rule.name = req.body.name;
-        rule.message = req.body.message;
-        rule.conditions = req.body.conditions;
+    .then(rules => {
+        rules.athletesId = req.body.athletesId;
+        rules.name = req.body.name;
+        rules.message = req.body.message;
+        rules.conditions = req.body.conditions;
 
-        rule.save()
+        rules.save()
         .then(() => res.json('Rule updated!'))
         .catch(err => res.status(400).json('Error: '+err));
     })
@@ -58,17 +58,12 @@ router.route('/update/:id').post((req,res) => {
 //QUANDO VISUALIZZO UNA SINGOLO REGOLA... non dovrebbe servire
 router.route('/:id').get((req,res) => {
     Rules.findById(req.params.id)
-    .then(rule => res.json(rule))
+    .then(rules => res.json(rules))
     .catch(err => res.status(400).json('Error: '+err));
 })
 
 
-
 module.exports = router; 
-
-
-
-
 
 
 // COSE IN PIÙ 
