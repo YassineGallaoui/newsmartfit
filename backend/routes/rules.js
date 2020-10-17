@@ -9,8 +9,15 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: '+err));
 })
 
+//QUANDO VISUALIZZO UNA SINGOLO REGOLA... non dovrebbe servire
+router.route('/:id').get((req,res) => {
+    Rules.findById(req.params.id)
+    .then(rules => res.json(rules))
+    .catch(err => res.status(400).json('Error: '+err));
+})
+
 // AGGIUNTA DI UNA SINGOLA REGOLA
- router.route('/add').post((req,res) => {
+router.route('/add').post((req,res) => {
     const athletesId = req.body.athletesId;
     const name = req.body.name;
     const message = req.body.message;
@@ -26,16 +33,6 @@ router.route('/').get((req, res) => {
     .then(() => res.json('Rule added!'))
     .catch(err => res.status(400).json('Error: '+ err));
 })
-
-
-
-// RIMOZIONE DI UNA SINGOLO REGOLA
-router.route('/:id').delete((req,res) => {
-    Rules.findByIdAndDelete(req.params.id)
-    .then(() => res.json("Rule deleted from database!"))
-    .catch(err => res.status(400).json('Error: '+err));
-})
-
 
 // QUANDO SI VOGLIONO MODIFICARE LE INFORMAZIONI DI UNA SINGOLA REGOLA
 router.route('/update/:id').post((req,res) => {
@@ -53,15 +50,12 @@ router.route('/update/:id').post((req,res) => {
     .catch(err => res.status(400).json('Error: '+err));
 })
 
-
-
-//QUANDO VISUALIZZO UNA SINGOLO REGOLA... non dovrebbe servire
-router.route('/:id').get((req,res) => {
-    Rules.findById(req.params.id)
-    .then(rules => res.json(rules))
+// RIMOZIONE DI UNA SINGOLO REGOLA
+router.route('/:id').delete((req,res) => {
+    Rules.findByIdAndDelete(req.params.id)
+    .then(() => res.json("Rule deleted from database!"))
     .catch(err => res.status(400).json('Error: '+err));
 })
-
 
 module.exports = router; 
 
