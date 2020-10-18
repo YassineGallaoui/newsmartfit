@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as HashRouter, Switch, Route} from "react-router-dom";
+import {HashRouter as Router, Switch, Route} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"
 
 import Header from "./components/header.component"
@@ -10,10 +10,9 @@ import DetailsAthlete from "./components/details-athlete.component"
 import AddRule from "./components/add-rule.component"
 import UpdateRule from "./components/update-rule.component"
 
-
 function App() {
   return (
-      <HashRouter>
+      <Router>
         <Header></Header>
         <Navbar></Navbar>
         <br/>
@@ -24,7 +23,7 @@ function App() {
           <Route exact path="/:id" component={DetailsAthlete}/>
           <Route exact path="/" component={AthletesList}/>
         </Switch>
-      </HashRouter>
+      </Router>
   );
 }
 

@@ -50,5 +50,4 @@ export default class AthletesList extends Component {
             </div>
         )
     }
-
 }
