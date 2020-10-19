@@ -18,7 +18,7 @@ const RuleBigDiv = props => (
                                     <ul>
                                     {
                                     props.rule.conditions.map(currentCondition => {
-                                        return <li>{currentCondition.type+" is "+currentCondition.operator+" "+currentCondition.value1+(currentCondition.value2===""? "":(" and "+currentCondition.value2))}</li>;
+                                        return <li><b>{currentCondition.link+" "}</b>{currentCondition.type+" is "+currentCondition.operator+" "+currentCondition.value1+(currentCondition.value2===""? "":(" and "+currentCondition.value2))}</li>;
                                     })
                                     }
                                     </ul>
