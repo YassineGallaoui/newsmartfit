@@ -156,6 +156,14 @@ export default class AddRule extends Component{
 
     onAddCondition(e){
         // CREARE COMPONENTI DELLA CONDIZIONE
+        if(this.state.currentValue1===""){
+            alert("Insert at least one value in the condition!")
+            return;
+        }
+        if(this.state.currentOp==="between" && (this.state.currentValue1==="" || this.state.currentValue2==="")){
+            alert("If you select between operation, you must also insert two valid values!")
+            return;
+        }
         let newCondition = {
             link: this.state.currentLink,
             operator: this.state.currentOp,
@@ -163,6 +171,7 @@ export default class AddRule extends Component{
             value1: this.state.currentValue1,
             value2: this.state.currentValue2
         }
+        console.log(newCondition);
         //AGGIORNARE LO STATE DELLE CONDIZIONI
         this.setState({
             conditions: this.state.conditions.concat(newCondition)
@@ -313,7 +322,7 @@ Do you want to automatically set name?`)) {
                 for(let x=0; x<arrRules.length; x++){
                     let nomeRule=arrRules[x].name;
                     console.log(nomeRule);
-                    if(nomeRule.indexOf("Automatically_Rule_Name_")>-1){
+                    if(nomeRule.indexOf("Automatic_Rule_Name_")>-1){
                         let n=nomeRule.substr(24)
                         numberRule=parseInt(n)+1;
                     }
@@ -380,9 +389,9 @@ Do you want to automatically set name?`)) {
                             {this.newAthletesList()}
                         <div
                         type="text"
-                        className="mb-2">
+                        className="mb-2 form-inline ">
                             <select required
-                                className="form-control"
+                                className="form-control col-sm-12 col-md-6 col-lg-6 col-xl-6  mr-3"
                                 ref={this.myRef}>
                                     <option
                                     value="noneSelected">
@@ -399,12 +408,11 @@ Do you want to automatically set name?`)) {
                                     )
                                 }
                             </select>
-                            <FontAwesomeIcon
-                                    icon={faPlusCircle}
-                                    className="mr-3 mt-2"
-                                    size="lg"
-                                    color="MediumSeaGreen"
-                                    onClick={()=> {this.onAddAthleteId()}}/>
+                            <button type="button"
+                                class="btn btn-success mx-3"
+                                onClick={()=> {this.onAddAthleteId()}}>
+                                Add
+                            </button>
                         </div>
                     </div>
                     
@@ -484,12 +492,12 @@ Do you want to automatically set name?`)) {
                                 value={this.state.value2}
                                 onChange={this.onChangeValue2Condition}
                                 ></input>
+                            <button type="button"
+                                class="btn btn-success mx-3"
+                                onClick={()=> {this.onAddCondition()}}>
+                                Add
+                            </button>
                         </div>
-                        <FontAwesomeIcon icon={faPlusCircle}
-                                className="mt-3"
-                                size="lg"
-                                color="MediumSeaGreen"
-                                onClick={()=> {this.onAddCondition()}}/>
                         <div className="mt-3 bg-warning text-dark rounded">
                         </div>
                     </div>
