@@ -323,7 +323,7 @@ Do you want to automatically set name?`)) {
                     let nomeRule=arrRules[x].name;
                     console.log(nomeRule);
                     if(nomeRule.indexOf("Automatic_Rule_Name_")>-1){
-                        let n=nomeRule.substr(24)
+                        let n=nomeRule.substr(20)
                         numberRule=parseInt(n)+1;
                     }
                 }
