@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinusSquare, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import Emoji from 'a11y-react-emoji';
 let exampleText=`You should:
         - first tip
         - second tip
@@ -113,7 +112,17 @@ export default class AddRule extends Component{
     }
 
     onChangeType(e){
+        if(e.target.value==="Mood"){
+            document.getElementById("selectVal1").style.display="none";
+            document.getElementById("selectVal2").style.display="none";
+            document.getElementById("selectValMood").style.display="block";
+        }else {
+            document.getElementById("selectValMood").style.display="none";
+            document.getElementById("selectVal1").style.display="block";
+            document.getElementById("selectVal2").style.display="block";
+        }
         this.setState({
+            currentValue1: "Really Bad",
             currentType: e.target.value
         })
     }
@@ -250,8 +259,8 @@ export default class AddRule extends Component{
                 type="text"
                 className="p-3 mb-2 bg-light"
                 key={currentathleteId}>
-                    <FontAwesomeIcon icon={faMinusSquare} className="mr-3" size="lg" color="OrangeRed" onClick={()=> {this.onRemoveAthleteId(currentathleteId)}}/>
                     <em className="">{currentathleteId}</em>
+                    <button className="btn btn-outline-danger btn-sm mx-3" onClick={()=> {this.onRemoveAthleteId(currentathleteId)}}>Remove</button>
                 </div>
             )
         })
@@ -279,9 +288,9 @@ export default class AddRule extends Component{
                     type="text"
                     className="p-3 mb-2 bg-light"
                     key={currentCondition.type+currentCondition.value1}>
-                        <FontAwesomeIcon icon={faMinusSquare} className="mr-3" size="lg" color="OrangeRed" onClick={()=> {this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2)}}/>
                         {index===0? ("    "):(<b><em>{currentCondition.link+" "}</em></b>)}
                         <em className="">{currentCondition.type+" is "+currentCondition.operator+" "+currentCondition.value1+(currentCondition.value2===""? "":(" and "+currentCondition.value2))}</em>
+                        <button className="btn btn-outline-danger btn-sm mx-3" onClick={()=> {this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2)}}>Remove</button>
                     </div>
                 </span>
             )
@@ -292,6 +301,7 @@ export default class AddRule extends Component{
         e.preventDefault();
 
         try {
+            //TOLGO IL LINK DALLA PRIMA CONDITION, PERCHÈ NON SERVE
             let conditions = [...this.state.conditions];
             let condition = conditions[0];
             condition.link = "";
@@ -301,6 +311,7 @@ export default class AddRule extends Component{
             console.log(this.state.conditions);
             console.log(this.state.message);
 
+            //TOLGO IL NOME DAGLI ATHLETES ID
             let athletesId = [...this.state.athletesId];            
             for(let p=0; p<athletesId.length; p++){
                 let athID = athletesId[p];
@@ -314,7 +325,9 @@ export default class AddRule extends Component{
             console.log("nessuna rule settata");
         }
 
+        //SE IL NOME NON È GIÀ SETTATO
         if(this.state.name===""){
+            //SE VOGLIO CHE VENGA SETTATO UN NOME GENERATO AUTOMATICAMENTE
             if (window.confirm(`Name not setted. 
 Do you want to automatically set name?`)) {
                 let arrRules=[...this.state.alreadyExistingRules]
@@ -361,10 +374,10 @@ Do you want to automatically set name?`)) {
             console.log(rule);
             
             axios.post('/rules/add/', rule)
-            .then(res => console.log(res.data))
-            
-            alert("Rule added!");
-            console.log("il nome è: "+this.state.name);
+            .then(res => {
+                console.log("Rule added"+res.data)
+                alert("Rule added!");
+            })
         }
     }
 
@@ -389,9 +402,9 @@ Do you want to automatically set name?`)) {
                             {this.newAthletesList()}
                         <div
                         type="text"
-                        className="mb-2 form-inline ">
+                        className="mb-2 form-inline">
                             <select required
-                                className="form-control col-sm-12 col-md-6 col-lg-6 col-xl-6  mr-3"
+                                className="form-control col-sm-12 col-md-6 col-lg-6 col-xl-6 mr-3"
                                 ref={this.myRef}>
                                     <option
                                     value="noneSelected">
@@ -447,10 +460,10 @@ Do you want to automatically set name?`)) {
                                 id="selectCondition"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeType}>
-                                <option value="Calories Intake (All Day)">Calories Intake - All Day</option>
-                                <option value="Calories Intake (Breakfast)">Calories Intake - Breakfast</option>
-                                <option value="Calories Intake (Lunch)">Calories Intake - Lunch</option>
-                                <option value="Calories Intake (Dinner)">Calories Intake - Dinner</option>
+                                <option value="Calories Intake (All Day)">Calories Intake - All Day (Kcal)</option>
+                                <option value="Calories Intake (Breakfast)">Calories Intake - Breakfast (Kcal)</option>
+                                <option value="Calories Intake (Lunch)">Calories Intake - Lunch (Kcal)</option>
+                                <option value="Calories Intake (Dinner)">Calories Intake - Dinner (Kcal)</option>
                                 <option value="Carbs (g)">Carbs (g)</option>
                                 <option value="Fat (g)">Fat (g)</option>
                                 <option value="Protein (g)">Protein (g)</option>
@@ -459,14 +472,13 @@ Do you want to automatically set name?`)) {
                                 <option value="Sugars (g)">Sugars (g)</option>
                                 <option value="Fibre (g)">Fibre (g)</option>
                                 <option value="Mood">Mood</option>
-                                <option value="Bed exits">Bed exits</option>
                                 <option value="Sleep hours">Sleep hours</option>
-                                <option value="Sleep latency">Sleep latency</option>
-                                <option value="Sleep awakening">Sleep awakening</option>
-                                <option value="Burned calories">Burned calories</option>
-                                <option value="Activity duration">Activity duration</option>
-                                <option value="Activity distance">Activity distance</option>
-                                <option value="Steps">Steps</option>
+                                <option value="Sleep latency">Sleep latency (minutes)</option>
+                                <option value="Sleep awakening">Sleep awakenings (number)</option>
+                                <option value="Activity duration">Activity duration (minutes)</option>
+                                <option value="Activity distance">Activity distance (minutes)</option>
+                                <option value="Burned calories">Burned calories (Kcal)</option>
+                                <option value="Steps">Steps (number)</option>
                             </select> is
                             <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mx-3"
                                 id="selectOp"
@@ -492,6 +504,17 @@ Do you want to automatically set name?`)) {
                                 value={this.state.value2}
                                 onChange={this.onChangeValue2Condition}
                                 ></input>
+                            {/* nel caso si parli di mood */}
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mx-3"
+                                id="selectValMood"
+                                title="Scegli una opzione"
+                                onChange={this.onChangeValue1Condition}>
+                                <option value="Really Bad">Really Bad ☹️</option>
+                                <option value="Bad">Bad 😕</option>
+                                <option value="Normal">Normal 😐</option>
+                                <option value="Good">Good 🙂</option>
+                                <option value="Really Good">Really Good 😃</option>
+                            </select>
                             <button type="button"
                                 class="btn btn-success mx-3"
                                 onClick={()=> {this.onAddCondition()}}>

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinusSquare, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import Emoji from 'a11y-react-emoji';
 let exampleText=`You should:
         - first tip
         - second tip
@@ -24,6 +23,7 @@ export default class UpdateRule extends Component{
             this.onChangeValue1Condition = this.onChangeValue1Condition.bind(this);
             this.onChangeValue2Condition = this.onChangeValue2Condition.bind(this);
             this.onChangelink = this.onChangelink.bind(this);
+        //this.filterAthletes = this.filterAthletes.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.myRef=React.createRef();
@@ -142,7 +142,17 @@ export default class UpdateRule extends Component{
     }
 
     onChangeType(e){
+        if(e.target.value==="Mood"){
+            document.getElementById("selectVal1").style.display="none";
+            document.getElementById("selectVal2").style.display="none";
+            document.getElementById("selectValMood").style.display="block";
+        }else {
+            document.getElementById("selectValMood").style.display="none";
+            document.getElementById("selectVal1").style.display="block";
+            document.getElementById("selectVal2").style.display="block";
+        }
         this.setState({
+            currentValue1: "Really Bad",
             currentType: e.target.value
         })
     }
@@ -184,7 +194,15 @@ export default class UpdateRule extends Component{
     }
 
     onAddCondition(e){
-        // FARE COSE
+        // CREARE COMPONENTI DELLA CONDIZIONE
+        if(this.state.currentValue1===""){
+            alert("Insert at least one value in the condition!")
+            return;
+        }
+        if(this.state.currentOp==="between" && (this.state.currentValue1==="" || this.state.currentValue2==="")){
+            alert("If you select between operation, you must also insert two valid values!")
+            return;
+        }
         let newCondition = {
             link: this.state.currentLink,
             operator: this.state.currentOp,
@@ -192,6 +210,8 @@ export default class UpdateRule extends Component{
             value1: this.state.currentValue1,
             value2: this.state.currentValue2
         }
+        console.log(newCondition);
+        //AGGIORNARE LO STATE DELLE CONDIZIONI
         this.setState({
             conditions: this.state.conditions.concat(newCondition)
         })
@@ -207,6 +227,61 @@ export default class UpdateRule extends Component{
         }
     }
 
+/*     componentDidUpdate(prevProps, prevState) {
+        if (prevState.conditions !== this.state.conditions) {
+            this.filterAthletes();
+        }
+      }
+
+    filterAthletes(){
+        console.log("sono dentro la funzione")
+        //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
+        let condizioni=this.state.conditions;
+        let atleti=this.state.permanentAthletesList;
+        for(let j=0; j<atleti.length; j++){        
+            for(let i=0; i<condizioni.length; i++){
+                let tipo=condizioni[i].type;
+                let operatore=condizioni[i].operator;
+                let valore1=condizioni[i].value1;
+                let valore2=condizioni[i].value2;
+                let link=condizioni[i].link;
+                console.log(tipo+" "+operatore+" "+valore1+" "+valore2+" "+link);
+                let whereToSearch="";
+                let comparison="";
+                // WHERE TO SEARCH
+                    //CASO 1
+                if(tipo==="Calories Intake (All Day)"||tipo==="Calories Intake (Breakfast)"||tipo==="Calories Intake (Lunch)"||tipo==="Calories Intake (Dinner)"||tipo==="Carbs (g)"||tipo==="Fat (g)"||tipo==="Protein (g)"||tipo==="Cholesterol (mg)"||tipo==="Sodium (mg)"||tipo==="Sugars (g)"||tipo==="Fibre (g)")
+                    whereToSearch="mfp";
+                    //CASO 2
+                if(tipo==="Mood") whereToSearch="mood";
+                    //CASO 3
+                if(tipo==="Bed exits"||tipo==="Sleep hours"||tipo==="Sleep latency"||tipo==="Sleep awakening") whereToSearch="sleep";
+                    //CASO 4
+                if(tipo==="Burned calories"||tipo==="Activity duration"||tipo==="Activity distance"||tipo==="Steps") whereToSearch="activity";
+                    //VEDIAMO COSA È USCITO FUORI
+                console.log("lo switch ha dato questo risultato: "+whereToSearch)
+                
+                // WHAT IS THE OPERATOR?
+                if(tipo==="equal to")           comparison="===";
+                if(tipo==="not equal to")       comparison="!==";
+                if(tipo==="higher than")        comparison=">";
+                if(tipo==="lower than")         comparison="<";
+                if(tipo==="between")            comparison="><";
+
+                //THE FIRST VALUE
+                let val1=parseFloat(valore1)
+
+                //THE SECOND VALUE
+                let val2=null;
+                if(valore2!=="") val2=parseFloat(valore2)
+                
+                // ===> ORA VALUTO SE LA CONDIZIONE IN QUESTIONE È VERA O MENO! <=== //
+
+                
+            }
+        }
+    } */
+
     newAthletesList(){
         return this.state.athletesId.map(currentathleteId => {
             return (
@@ -214,8 +289,8 @@ export default class UpdateRule extends Component{
                 type="text"
                 className="p-3 mb-2 bg-light"
                 key={currentathleteId}>
-                    <FontAwesomeIcon icon={faMinusSquare} className="mr-3" size="lg" color="OrangeRed" onClick={()=> {this.onRemoveAthleteId(currentathleteId)}}/>
                     <em className="">{currentathleteId}</em>
+                    <button className="btn btn-outline-danger btn-sm mx-3" onClick={()=> {this.onRemoveAthleteId(currentathleteId)}}>Remove</button>
                 </div>
             )
         })
@@ -243,9 +318,9 @@ export default class UpdateRule extends Component{
                     type="text"
                     className="p-3 mb-2 bg-light"
                     key={currentCondition.type+currentCondition.value1}>
-                        <FontAwesomeIcon icon={faMinusSquare} className="mr-3" size="lg" color="OrangeRed" onClick={()=> {this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2)}}/>
                         {index===0? ("    "):(<b><em>{currentCondition.link+" "}</em></b>)}
                         <em className="">{currentCondition.type+" is "+currentCondition.operator+" "+currentCondition.value1+(currentCondition.value2===""? "":(" and "+currentCondition.value2))}</em>
+                        <button className="btn btn-outline-danger btn-sm mx-3" onClick={()=> {this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2)}}>Remove</button>
                     </div>
                 </span>
             )
@@ -261,7 +336,10 @@ export default class UpdateRule extends Component{
             let condition = conditions[0];
             condition.link = "";
             conditions[0] = condition;
-            this.setState({conditions});
+            this.setState({conditions});    
+            console.log(this.state.name);
+            console.log(this.state.conditions);
+            console.log(this.state.message);
 
             //TOLGO IL NOME DAGLI ATHLETES ID
             let athletesId = [...this.state.athletesId];            
@@ -287,13 +365,13 @@ Do you want to automatically set name?`)) {
                 for(let x=0; x<arrRules.length; x++){
                     let nomeRule=arrRules[x].name;
                     console.log(nomeRule);
-                    if(nomeRule.indexOf("Automatically_Rule_Name_")>-1){
-                        let n=nomeRule.substr(24)
+                    if(nomeRule.indexOf("Automatic_Rule_Name_")>-1){
+                        let n=nomeRule.substr(20)
                         numberRule=parseInt(n)+1;
                     }
                 }
                 if(numberRule===-1) numberRule=0
-                let nuovoNome="Automatically_Rule_Name_"+numberRule;
+                let nuovoNome="Automatic_Rule_Name_"+numberRule;
                 this.state.name=nuovoNome; //IL METODO THIS.SETSTATE PER QUALCHE MOTIVO NON FUNZIONA!!! DA RISOLVERE POSSIBILMENTE!
                 console.log("il nome è: "+this.state.name);
                         
@@ -324,15 +402,13 @@ Do you want to automatically set name?`)) {
             }
 
             console.log(rule);
-
+            
             axios.post('/rules/update/'+this.props.match.params.id, rule)
             .then(res => {
                 console.log("Rule updated"+res.data);
                 alert("Rule updated!");
             })
         }
-        
-        
     }
 
     render() {
@@ -356,9 +432,9 @@ Do you want to automatically set name?`)) {
                             {this.newAthletesList()}
                         <div
                         type="text"
-                        className="mb-2">
+                        className="mb-2 form-inline">
                             <select required
-                                className="form-control"
+                                className="form-control col-sm-12 col-md-6 col-lg-6 col-xl-6 mr-3"
                                 ref={this.myRef}>
                                     <option
                                     value="noneSelected">
@@ -375,12 +451,11 @@ Do you want to automatically set name?`)) {
                                     )
                                 }
                             </select>
-                            <FontAwesomeIcon
-                                    icon={faPlusCircle}
-                                    className="mr-3 mt-2"
-                                    size="lg"
-                                    color="MediumSeaGreen"
-                                    onClick={()=> {this.onAddAthleteId()}}/>
+                            <button type="button"
+                                class="btn btn-success mx-3"
+                                onClick={()=> {this.onAddAthleteId()}}>
+                                Add
+                            </button>
                         </div>
                     </div>
                     
@@ -415,10 +490,10 @@ Do you want to automatically set name?`)) {
                                 id="selectCondition"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeType}>
-                                <option value="Calories Intake (All Day)">Calories Intake - All Day</option>
-                                <option value="Calories Intake (Breakfast)">Calories Intake - Breakfast</option>
-                                <option value="Calories Intake (Lunch)">Calories Intake - Lunch</option>
-                                <option value="Calories Intake (Dinner)">Calories Intake - Dinner</option>
+                                <option value="Calories Intake (All Day)">Calories Intake - All Day (Kcal)</option>
+                                <option value="Calories Intake (Breakfast)">Calories Intake - Breakfast (Kcal)</option>
+                                <option value="Calories Intake (Lunch)">Calories Intake - Lunch (Kcal)</option>
+                                <option value="Calories Intake (Dinner)">Calories Intake - Dinner (Kcal)</option>
                                 <option value="Carbs (g)">Carbs (g)</option>
                                 <option value="Fat (g)">Fat (g)</option>
                                 <option value="Protein (g)">Protein (g)</option>
@@ -427,14 +502,13 @@ Do you want to automatically set name?`)) {
                                 <option value="Sugars (g)">Sugars (g)</option>
                                 <option value="Fibre (g)">Fibre (g)</option>
                                 <option value="Mood">Mood</option>
-                                <option value="Bed exits">Bed exits</option>
                                 <option value="Sleep hours">Sleep hours</option>
-                                <option value="Sleep latency">Sleep latency</option>
-                                <option value="Sleep awakening">Sleep awakening</option>
-                                <option value="Burned calories">Burned calories</option>
-                                <option value="Activity duration">Activity duration</option>
-                                <option value="Activity distance">Activity distance</option>
-                                <option value="Steps">Steps</option>
+                                <option value="Sleep latency">Sleep latency (minutes)</option>
+                                <option value="Sleep awakening">Sleep awakenings (number)</option>
+                                <option value="Activity duration">Activity duration (minutes)</option>
+                                <option value="Activity distance">Activity distance (minutes)</option>
+                                <option value="Burned calories">Burned calories (Kcal)</option>
+                                <option value="Steps">Steps (number)</option>
                             </select> is
                             <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mx-3"
                                 id="selectOp"
@@ -447,6 +521,7 @@ Do you want to automatically set name?`)) {
                             </select>
                             {/* primo valore */}
                             <input type="number"
+                                required
                                 className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mx-3"
                                 id="selectVal1"
                                 value={this.state.value1}
@@ -459,12 +534,23 @@ Do you want to automatically set name?`)) {
                                 value={this.state.value2}
                                 onChange={this.onChangeValue2Condition}
                                 ></input>
+                            {/* nel caso si parli di mood */}
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mx-3"
+                                id="selectValMood"
+                                title="Scegli una opzione"
+                                onChange={this.onChangeValue1Condition}>
+                                <option value="Really Bad">Really Bad ☹️</option>
+                                <option value="Bad">Bad 😕</option>
+                                <option value="Normal">Normal 😐</option>
+                                <option value="Good">Good 🙂</option>
+                                <option value="Really Good">Really Good 😃</option>
+                            </select>
+                            <button type="button"
+                                class="btn btn-success mx-3"
+                                onClick={()=> {this.onAddCondition()}}>
+                                Add
+                            </button>
                         </div>
-                        <FontAwesomeIcon icon={faPlusCircle}
-                                className="mt-3"
-                                size="lg"
-                                color="MediumSeaGreen"
-                                onClick={()=> {this.onAddCondition()}}/>
                         <div className="mt-3 bg-warning text-dark rounded">
                         </div>
                     </div>
