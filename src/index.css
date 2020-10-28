@@ -52,8 +52,15 @@ code {
 
 .tabellaMoodDate{
   text-align:center;
-  transform: rotate(-90deg);
 }
+
+.tabellaMoodDateText{
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+}
+
 .tabellaMoodDate2{
   text-align:center;
   font-size:22px;

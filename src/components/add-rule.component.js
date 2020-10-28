@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import Emoji from 'a11y-react-emoji';
 let exampleText=`You should:
         - first tip
         - second tip
@@ -300,6 +299,11 @@ export default class AddRule extends Component{
     onSubmit(e){
         e.preventDefault();
 
+        if(this.state.conditions.length===0){
+            alert("Insert at least one value in the condition!");
+            return;
+        }
+
         try {
             //TOLGO IL LINK DALLA PRIMA CONDITION, PERCHÈ NON SERVE
             let conditions = [...this.state.conditions];
@@ -509,11 +513,11 @@ Do you want to automatically set name?`)) {
                                 id="selectValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue1Condition}>
-                                <option value="Really Bad">Really Bad ☹️</option>
-                                <option value="Bad">Bad 😕</option>
-                                <option value="Normal">Normal 😐</option>
-                                <option value="Good">Good 🙂</option>
-                                <option value="Really Good">Really Good 😃</option>
+                                <option value="Really Bad">Really Bad <span role="img" aria-label="Really Bad">☹️</span></option>
+                                <option value="Bad">Bad <span role="img" aria-label="Bad">😕</span></option>
+                                <option value="Normal">Normal <span role="img" aria-label="Normal">😐</span></option>
+                                <option value="Good">Good <span role="img" aria-label="Good">🙂</span></option>
+                                <option value="Really Good">Really Good <span role="img" aria-label="Really Good">😃</span></option>
                             </select>
                             <button type="button"
                                 class="btn btn-success mx-3"
