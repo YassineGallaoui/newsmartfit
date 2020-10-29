@@ -153,17 +153,7 @@ export default class DetailsAthlete extends Component {
                     let parts = arrInfo[i].Data.split("/")
                     let dateInfo = parts[2] + "-" + parts[1] + "-" + parts[0];
                     dateInfo = new Date(dateInfo + "T00:00:00");
-                    /* let parts2 = date.toLocaleDateString('ko-KR').split("-");
-                    let dateSetted = parts[2] + "-" + parts[1] + "-" + parts[0]; */
                     if (date !== null && Date.parse(dateInfo) > Date.parse(date.toLocaleDateString('ko-KR'))) {
-                        /*  console.log("setted: "+date.toLocaleDateString('ko-KR'))
-                            let parts2 = date.toLocaleDateString('ko-KR').split(". ");
-                            let dateSetted = parts2[2] + "-" + parts2[1] + "-" + parts2[0];
-                            console.log("edit n1: "+dateSetted) */
-                        /* let dateInfoForBug =new Date();
-                        dateInfoForBug.setDate(dateInfo.getDate()-1)
-                        console.log("date "+dateInfo+" ha questo formato: ")
-                        console.log("dateinfo "+dateInfoForBug+" ha questo formato: ") */
                         arrInfo.splice(i, 1);
                         i--
                     }
@@ -204,6 +194,7 @@ export default class DetailsAthlete extends Component {
             return this.state.mood.map(currentmood => {
                 let parts = currentmood.Data.split("/")
                 let correctDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+                correctDate = new Date(correctDate + "T00:00:00");
                 if (Date.parse(correctDate) <= Date.parse(this.state.endDate.toLocaleDateString('ko-KR'))) {
                     return <DataRow mood={currentmood} key={currentmood.Data}></DataRow>;
                 }
@@ -213,6 +204,7 @@ export default class DetailsAthlete extends Component {
             return this.state.mood.map(currentmood => {
                 let parts = currentmood.Data.split("/")
                 let correctDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+                correctDate = new Date(correctDate + "T00:00:00");
                 if (Date.parse(correctDate) >= Date.parse(this.state.startDate.toLocaleDateString('ko-KR')) && Date.parse(correctDate) <= Date.parse(this.state.endDate.toLocaleDateString('ko-KR'))) {
                     return <DataRow mood={currentmood} key={currentmood.Data}></DataRow>;
                 }
@@ -239,6 +231,7 @@ export default class DetailsAthlete extends Component {
             return this.state.mood.map(currentmood => {
                 let parts = currentmood.Data.split("/")
                 let correctDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+                correctDate = new Date(correctDate + "T00:00:00");
                 if (Date.parse(correctDate) <= Date.parse(this.state.endDate.toLocaleDateString('ko-KR'))) {
                     return <MoodRow mood={currentmood} onSetEmoticon={this.setEmoticon} key={currentmood.Data}></MoodRow>;
                 }
@@ -248,6 +241,7 @@ export default class DetailsAthlete extends Component {
             return this.state.mood.map(currentmood => {
                 let parts = currentmood.Data.split("/")
                 let correctDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+                correctDate = new Date(correctDate + "T00:00:00");
                 if (Date.parse(correctDate) >= Date.parse(this.state.startDate.toLocaleDateString('ko-KR')) && Date.parse(correctDate) <= Date.parse(this.state.endDate.toLocaleDateString('ko-KR'))) {
                     return <MoodRow mood={currentmood} onSetEmoticon={this.setEmoticon} key={currentmood.Data}></MoodRow>;
                 }
