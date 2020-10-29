@@ -10,32 +10,32 @@ const RuleBigDiv = props => (
                 <div className="content">
                     <div className="card-body">
                         <div className="card-text">
-                            <button type="button" className="btn btn-outline-danger float-right ml-3 mb-3" onClick={() => {if(window.confirm('Sure you want to delete this rule?')) props.delete(props.rule._id)}}>Delete Rule</button>
-                            <Link to={"/rules/update/"+props.rule._id}><button type="button" className="btn btn-outline-warning float-right">Edit Rule</button></Link>
+                            <button type="button" className="btn btn-outline-danger float-right ml-3 mb-3" onClick={() => { if (window.confirm('Sure you want to delete this rule?')) props.delete(props.rule._id) }}>Delete Rule</button>
+                            <Link to={"/rules/update/" + props.rule._id}><button type="button" className="btn btn-outline-warning float-right">Edit Rule</button></Link>
                             <div className="row">
                                 <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                                     <h6><label>Conditions</label></h6>
                                     <ul>
-                                    {
-                                    props.rule.conditions.map(currentCondition => {
-                                        return <li><b>{currentCondition.link+" "}</b>{currentCondition.type+" is "+currentCondition.operator+" "+currentCondition.value1+(currentCondition.value2===""? "":(" and "+currentCondition.value2))}</li>;
-                                    })
-                                    }
+                                        {
+                                            props.rule.conditions.map(currentCondition => {
+                                                return <li><b>{currentCondition.link + " "}</b>{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</li>;
+                                            })
+                                        }
                                     </ul>
                                 </div>
                                 <div className="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                                     <h6><label>Athletes</label></h6>
                                     <ul>
                                         {
-                                        props.rule.athletesId.map(currentAthlete => {
-                                            let name = "";
-                                            let arr = props.athletes;
-                                            for(let i=0; i<arr.length; i++){
-                                                if(arr[i]._id===currentAthlete)
-                                                    name=arr[i].name
-                                            }
-                                            return <li>{name+" ~ "+currentAthlete}</li>;
-                                        })
+                                            props.rule.athletesId.map(currentAthlete => {
+                                                let name = "";
+                                                let arr = props.athletes;
+                                                for (let i = 0; i < arr.length; i++) {
+                                                    if (arr[i]._id === currentAthlete)
+                                                        name = arr[i].name
+                                                }
+                                                return <li>{name + " ~ " + currentAthlete}</li>;
+                                            })
                                         }
                                     </ul>
                                 </div>
@@ -74,7 +74,7 @@ export default class RulesList extends Component {
             .catch((error) => {
                 console.log(error);
             })
-        
+
         axios.get('/athletes/')
             .then(response => {
                 this.setState({ athletes: response.data });
@@ -85,10 +85,11 @@ export default class RulesList extends Component {
     }
 
     deleteRule(id) {
-        axios.delete('/rules/'+id)
-            .then(response => {console.log("Rule "+id+" eliminated");
+        axios.delete('/rules/' + id)
+            .then(response => {
+                console.log("Rule " + id + " eliminated");
                 this.setState({
-                    rules: this.state.rules.filter(el =>el._id !==id)
+                    rules: this.state.rules.filter(el => el._id !== id)
                 })
             })
             .catch((error) => {
@@ -109,7 +110,7 @@ export default class RulesList extends Component {
                     Your Rules
                     <Link to={"/rules/add"}><button type="button" className="float-right btn btn-outline-primary">New rule</button></Link>
                 </h2>
-                    {this.rulesList()}
+                {this.rulesList()}
             </div>
         )
     }

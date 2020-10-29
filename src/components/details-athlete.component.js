@@ -19,8 +19,27 @@ const MoodRow = props => (
     </td>
 )
 
-export default class DetailsAthlete extends Component {
+let currentYear = new Date().getFullYear(), years = [];
+let startYear = 2000;
+while (startYear <= currentYear) {
+    years.push(startYear++);
+}
+let months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
 
+export default class DetailsAthlete extends Component {
     constructor(props) {
         super(props);
 
@@ -92,12 +111,13 @@ export default class DetailsAthlete extends Component {
             if (arrInfo.length > 0) {
                 for (let i = 0; i < arrInfo.length; i++) {
                     let parts = arrInfo[i].Data.split("/")
-                    let correctDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-                    if (date !== null && Date.parse(correctDate) < Date.parse(date.toLocaleDateString('ko-KR'))) {
+                    let dateInfo = parts[2] + "-" + parts[1] + "-" + parts[0];
+                    if (date !== null && Date.parse(dateInfo) < Date.parse(date.toLocaleDateString('ko-KR'))) {
                         arrInfo.splice(i, 1);
                         i--
                     }
-                    if (this.state.endDate !== null && Date.parse(correctDate) > Date.parse(this.state.endDate.toLocaleDateString('ko-KR'))) {
+                    dateInfo = new Date(dateInfo + "T00:00:00");
+                    if (this.state.endDate !== null && Date.parse(dateInfo) > Date.parse(this.state.endDate.toLocaleDateString('ko-KR'))) {
                         arrInfo.splice(i, 1);
                         i--
                     }
@@ -131,12 +151,23 @@ export default class DetailsAthlete extends Component {
             if (arrInfo.length > 0) {
                 for (let i = 0; i < arrInfo.length; i++) {
                     let parts = arrInfo[i].Data.split("/")
-                    let correctDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-                    if (date !== null && Date.parse(correctDate) > Date.parse(date.toLocaleDateString('ko-KR'))) {
+                    let dateInfo = parts[2] + "-" + parts[1] + "-" + parts[0];
+                    dateInfo = new Date(dateInfo + "T00:00:00");
+                    /* let parts2 = date.toLocaleDateString('ko-KR').split("-");
+                    let dateSetted = parts[2] + "-" + parts[1] + "-" + parts[0]; */
+                    if (date !== null && Date.parse(dateInfo) > Date.parse(date.toLocaleDateString('ko-KR'))) {
+                        /*  console.log("setted: "+date.toLocaleDateString('ko-KR'))
+                            let parts2 = date.toLocaleDateString('ko-KR').split(". ");
+                            let dateSetted = parts2[2] + "-" + parts2[1] + "-" + parts2[0];
+                            console.log("edit n1: "+dateSetted) */
+                        /* let dateInfoForBug =new Date();
+                        dateInfoForBug.setDate(dateInfo.getDate()-1)
+                        console.log("date "+dateInfo+" ha questo formato: ")
+                        console.log("dateinfo "+dateInfoForBug+" ha questo formato: ") */
                         arrInfo.splice(i, 1);
                         i--
                     }
-                    if (this.state.startDate !== null && Date.parse(correctDate) < Date.parse(this.state.startDate.toLocaleDateString('ko-KR'))) {
+                    if (this.state.startDate !== null && Date.parse(dateInfo) < Date.parse(this.state.startDate.toLocaleDateString('ko-KR'))) {
                         arrInfo.splice(i, 1);
                         i--
                     }
@@ -239,15 +270,15 @@ export default class DetailsAthlete extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-6 col-xl-6 my-3">
                         <div className="card">
-                            <button className="collapsible">Informazioni generali</button>
+                            <button className="collapsible">General Info</button>
                             <div className="content">
                                 <div className="card-body">
                                     <p className="card-text">
                                         <span className="text-muted"><em>AthleteID: {this.state.id}</em></span><br />
-                                        <span>Nome: {this.state.name}</span><br />
-                                        <span>Data di nascita: {this.state.dob}</span><br />
-                                        <span>Peso: {this.state.weight}</span><br />
-                                        <span>Altezza: {this.state.height}</span><br />
+                                        <span>Name: {this.state.name}</span><br />
+                                        <span>Birthday: {this.state.dob}</span><br />
+                                        <span>Weight: {this.state.weight}</span><br />
+                                        <span>Height: {this.state.height}</span><br />
                                     </p>
                                 </div>
                             </div>
@@ -274,10 +305,60 @@ export default class DetailsAthlete extends Component {
                                 <span className="mr-3">Filter graphs by date range:</span>
                                 <span className="d-inline-block">
                                     <DatePicker
+                                        renderCustomHeader={({
+                                            date,
+                                            changeYear,
+                                            changeMonth,
+                                            decreaseMonth,
+                                            increaseMonth,
+                                            prevMonthButtonDisabled,
+                                            nextMonthButtonDisabled
+                                        }) => (
+                                                <div
+                                                    style={{
+                                                        margin: 10,
+                                                        display: "flex",
+                                                        justifyContent: "center"
+                                                    }}
+                                                >
+                                                    <button type="button" className="btn btn-light btn-sm" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                                                        {"<"}
+                                                    </button>
+                                                    <select
+                                                        className="form-control form-control-sm"
+                                                        value={date.getFullYear()}
+                                                        onChange={({ target: { value } }) => changeYear(value)}
+                                                    >
+                                                        {years.map(option => (
+                                                            <option key={option} value={option}>
+                                                                {option}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+
+                                                    <select
+                                                        className="form-control form-control-sm"
+                                                        value={months[date.getMonth()]}
+                                                        onChange={({ target: { value } }) =>
+                                                            changeMonth(months.indexOf(value))
+                                                        }
+                                                    >
+                                                        {months.map(option => (
+                                                            <option key={option} value={option}>
+                                                                {option}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+
+                                                    <button type="button" className="btn btn-light btn-sm" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                                                        {">"}
+                                                    </button>
+                                                </div>
+                                            )}
                                         dateFormat="dd/MM/yyyy"
                                         selected={this.state.startDate}
                                         onChange={date => this.onChangeStartDate(date)}
-                                        maxDate={new Date()}
+                                        maxDate={this.state.endDate}
                                         isClearable
                                         placeholderText=" No start date selected"
                                         className="d-inline-block mx-3"
@@ -285,6 +366,56 @@ export default class DetailsAthlete extends Component {
                                 </span>
                                 <span className="d-inline-block">
                                     <DatePicker
+                                        renderCustomHeader={({
+                                            date,
+                                            changeYear,
+                                            changeMonth,
+                                            decreaseMonth,
+                                            increaseMonth,
+                                            prevMonthButtonDisabled,
+                                            nextMonthButtonDisabled
+                                        }) => (
+                                                <div
+                                                    style={{
+                                                        margin: 10,
+                                                        display: "flex",
+                                                        justifyContent: "center"
+                                                    }}
+                                                >
+                                                    <button type="button" className="btn btn-light btn-sm" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                                                        {"<"}
+                                                    </button>
+                                                    <select
+                                                        className="form-control form-control-sm"
+                                                        value={date.getFullYear()}
+                                                        onChange={({ target: { value } }) => changeYear(value)}
+                                                    >
+                                                        {years.map(option => (
+                                                            <option key={option} value={option}>
+                                                                {option}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+
+                                                    <select
+                                                        className="form-control form-control-sm"
+                                                        value={months[date.getMonth()]}
+                                                        onChange={({ target: { value } }) =>
+                                                            changeMonth(months.indexOf(value))
+                                                        }
+                                                    >
+                                                        {months.map(option => (
+                                                            <option key={option} value={option}>
+                                                                {option}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+
+                                                    <button type="button" className="btn btn-light btn-sm" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                                                        {">"}
+                                                    </button>
+                                                </div>
+                                            )}
                                         dateFormat="dd/MM/yyyy"
                                         selected={this.state.endDate}
                                         onChange={date => this.onChangeEndDate(date)}
