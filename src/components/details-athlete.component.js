@@ -45,6 +45,7 @@ export default class DetailsAthlete extends Component {
 
         this.onChangeStartDate = this.onChangeStartDate.bind(this);
         this.onChangeEndDate = this.onChangeEndDate.bind(this);
+        this.showMyRules = this.showMyRules.bind(this);
 
         this.state = {
             id: '',
@@ -64,7 +65,8 @@ export default class DetailsAthlete extends Component {
             moodToPass: [],
             athletes: [],
             startDate: null,
-            endDate: null
+            endDate: null,
+            rules:[]
         }
     }
 
@@ -93,6 +95,27 @@ export default class DetailsAthlete extends Component {
             .catch(function (error) {
                 console.log(error);
             })
+
+        axios.get('/rules/')
+            .then(response => {
+                this.setState({ rules: response.data });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+    showMyRules(){
+        console.log("ok sono dentro la funzione")
+        return this.state.rules.map(currentRule => {
+            let arr=[...currentRule.athletesId]
+            for(let i=0; i<arr.length; i++){
+                console.log("arr[i] : "+arr[i])
+                if(arr[i]===this.props.match.params.id){
+                    return <div key={currentRule._id}>- {currentRule.name}</div>;
+                }
+            }
+        })
     }
 
     onChangeStartDate(date) {
@@ -285,6 +308,7 @@ export default class DetailsAthlete extends Component {
                                 <div className="card-body">
                                     <p className="card-text">
                                         <span className="text-muted"><em>{this.state.name} has got the following rules:</em></span><br />
+                                        <span>{this.showMyRules()}</span>
                                     </p>
                                 </div>
                             </div>
