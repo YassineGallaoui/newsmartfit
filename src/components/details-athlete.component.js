@@ -294,133 +294,137 @@ export default class DetailsAthlete extends Component {
 
                 <div className="row">
                     <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 my-3">
-                        <div className="row">
-                            <div className="bg-light col-sm-12 col-md-12 col-lg-12 col-xl-12 py-3">
-                                <span className="mr-3">Filter graphs by date range:</span>
-                                <span className="d-inline-block">
-                                    <DatePicker
-                                        renderCustomHeader={({
-                                            date,
-                                            changeYear,
-                                            changeMonth,
-                                            decreaseMonth,
-                                            increaseMonth,
-                                            prevMonthButtonDisabled,
-                                            nextMonthButtonDisabled
-                                        }) => (
-                                                <div
-                                                    style={{
-                                                        margin: 10,
-                                                        display: "flex",
-                                                        justifyContent: "center"
-                                                    }}
-                                                >
-                                                    <button type="button" className="btn btn-light btn-sm" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-                                                        {"<"}
-                                                    </button>
-                                                    <select
-                                                        className="form-control form-control-sm"
-                                                        value={date.getFullYear()}
-                                                        onChange={({ target: { value } }) => changeYear(value)}
-                                                    >
-                                                        {years.map(option => (
-                                                            <option key={option} value={option}>
-                                                                {option}
-                                                            </option>
-                                                        ))}
-                                                    </select>
+                        <div className="card bg-light">
+                            <div className="card-body py-3">
+                                <div className="row">
+                                    <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <span className="mr-3">If you want, filter graphs by date range:</span>
+                                        <span className="d-inline-block">
+                                            <DatePicker
+                                                renderCustomHeader={({
+                                                    date,
+                                                    changeYear,
+                                                    changeMonth,
+                                                    decreaseMonth,
+                                                    increaseMonth,
+                                                    prevMonthButtonDisabled,
+                                                    nextMonthButtonDisabled
+                                                }) => (
+                                                        <div
+                                                            style={{
+                                                                margin: 10,
+                                                                display: "flex",
+                                                                justifyContent: "center"
+                                                            }}
+                                                        >
+                                                            <button type="button" className="btn btn-light btn-sm" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                                                                {"<"}
+                                                            </button>
+                                                            <select
+                                                                className="form-control form-control-sm"
+                                                                value={date.getFullYear()}
+                                                                onChange={({ target: { value } }) => changeYear(value)}
+                                                            >
+                                                                {years.map(option => (
+                                                                    <option key={option} value={option}>
+                                                                        {option}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
 
-                                                    <select
-                                                        className="form-control form-control-sm"
-                                                        value={months[date.getMonth()]}
-                                                        onChange={({ target: { value } }) =>
-                                                            changeMonth(months.indexOf(value))
-                                                        }
-                                                    >
-                                                        {months.map(option => (
-                                                            <option key={option} value={option}>
-                                                                {option}
-                                                            </option>
-                                                        ))}
-                                                    </select>
+                                                            <select
+                                                                className="form-control form-control-sm"
+                                                                value={months[date.getMonth()]}
+                                                                onChange={({ target: { value } }) =>
+                                                                    changeMonth(months.indexOf(value))
+                                                                }
+                                                            >
+                                                                {months.map(option => (
+                                                                    <option key={option} value={option}>
+                                                                        {option}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
 
-                                                    <button type="button" className="btn btn-light btn-sm" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-                                                        {">"}
-                                                    </button>
-                                                </div>
-                                            )}
-                                        dateFormat="dd/MM/yyyy"
-                                        selected={this.state.startDate}
-                                        onChange={date => this.onChangeStartDate(date)}
-                                        maxDate={this.state.endDate}
-                                        isClearable
-                                        placeholderText=" No start date selected"
-                                        className="d-inline-block mx-3"
-                                    />
-                                </span>
-                                <span className="d-inline-block">
-                                    <DatePicker
-                                        renderCustomHeader={({
-                                            date,
-                                            changeYear,
-                                            changeMonth,
-                                            decreaseMonth,
-                                            increaseMonth,
-                                            prevMonthButtonDisabled,
-                                            nextMonthButtonDisabled
-                                        }) => (
-                                                <div
-                                                    style={{
-                                                        margin: 10,
-                                                        display: "flex",
-                                                        justifyContent: "center"
-                                                    }}
-                                                >
-                                                    <button type="button" className="btn btn-light btn-sm" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-                                                        {"<"}
-                                                    </button>
-                                                    <select
-                                                        className="form-control form-control-sm"
-                                                        value={date.getFullYear()}
-                                                        onChange={({ target: { value } }) => changeYear(value)}
-                                                    >
-                                                        {years.map(option => (
-                                                            <option key={option} value={option}>
-                                                                {option}
-                                                            </option>
-                                                        ))}
-                                                    </select>
+                                                            <button type="button" className="btn btn-light btn-sm" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                                                                {">"}
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                dateFormat="dd/MM/yyyy"
+                                                selected={this.state.startDate}
+                                                onChange={date => this.onChangeStartDate(date)}
+                                                maxDate={this.state.endDate}
+                                                isClearable
+                                                placeholderText=" No start date selected"
+                                                className="d-inline-block mx-3"
+                                            />
+                                        </span>
+                                        <span className="d-inline-block">
+                                            <DatePicker
+                                                renderCustomHeader={({
+                                                    date,
+                                                    changeYear,
+                                                    changeMonth,
+                                                    decreaseMonth,
+                                                    increaseMonth,
+                                                    prevMonthButtonDisabled,
+                                                    nextMonthButtonDisabled
+                                                }) => (
+                                                        <div
+                                                            style={{
+                                                                margin: 10,
+                                                                display: "flex",
+                                                                justifyContent: "center"
+                                                            }}
+                                                        >
+                                                            <button type="button" className="btn btn-light btn-sm" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                                                                {"<"}
+                                                            </button>
+                                                            <select
+                                                                className="form-control form-control-sm"
+                                                                value={date.getFullYear()}
+                                                                onChange={({ target: { value } }) => changeYear(value)}
+                                                            >
+                                                                {years.map(option => (
+                                                                    <option key={option} value={option}>
+                                                                        {option}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
 
-                                                    <select
-                                                        className="form-control form-control-sm"
-                                                        value={months[date.getMonth()]}
-                                                        onChange={({ target: { value } }) =>
-                                                            changeMonth(months.indexOf(value))
-                                                        }
-                                                    >
-                                                        {months.map(option => (
-                                                            <option key={option} value={option}>
-                                                                {option}
-                                                            </option>
-                                                        ))}
-                                                    </select>
+                                                            <select
+                                                                className="form-control form-control-sm"
+                                                                value={months[date.getMonth()]}
+                                                                onChange={({ target: { value } }) =>
+                                                                    changeMonth(months.indexOf(value))
+                                                                }
+                                                            >
+                                                                {months.map(option => (
+                                                                    <option key={option} value={option}>
+                                                                        {option}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
 
-                                                    <button type="button" className="btn btn-light btn-sm" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-                                                        {">"}
-                                                    </button>
-                                                </div>
-                                            )}
-                                        dateFormat="dd/MM/yyyy"
-                                        selected={this.state.endDate}
-                                        onChange={date => this.onChangeEndDate(date)}
-                                        minDate={this.state.startDate}
-                                        maxDate={new Date()}
-                                        isClearable
-                                        placeholderText=" No end date selected"
-                                        className="d-inline-block mx-3"
-                                    />
-                                </span>
-                                <br />
+                                                            <button type="button" className="btn btn-light btn-sm" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                                                                {">"}
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                dateFormat="dd/MM/yyyy"
+                                                selected={this.state.endDate}
+                                                onChange={date => this.onChangeEndDate(date)}
+                                                minDate={this.state.startDate}
+                                                maxDate={new Date()}
+                                                isClearable
+                                                placeholderText=" No end date selected"
+                                                className="d-inline-block mx-3"
+                                            />
+                                        </span>
+                                        <br />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
