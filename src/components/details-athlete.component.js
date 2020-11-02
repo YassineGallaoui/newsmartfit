@@ -106,15 +106,37 @@ export default class DetailsAthlete extends Component {
     }
 
     showMyRules(){
-        console.log("ok sono dentro la funzione")
+        let firstTime=0;
         return this.state.rules.map(currentRule => {
             let arr=[...currentRule.athletesId]
             for(let i=0; i<arr.length; i++){
-                console.log("arr[i] : "+arr[i])
                 if(arr[i]===this.props.match.params.id){
-                    return <div key={currentRule._id}>- {currentRule.name}</div>;
+                    if(firstTime===0){
+                        document.getElementById("textMyAthleteRules").innerHTML = this.state.name +" has got the following rules:"
+                    }
+                    firstTime++;
+                    return  <div className="card mt-3 card-body" key={currentRule._id}>
+                                <mark className="h6">&gt; {currentRule.name}</mark>
+                                <div>
+                                    <label>Conditions</label>
+                                    <ul>
+                                        {
+                                            currentRule.conditions.map(currentCondition => {
+                                                return <li><b>{currentCondition.link + " "}</b>{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</li>;
+                                            })
+                                        }
+                                    </ul>
+                                    <label>Message</label><br />
+                                    <span>
+                                        {currentRule.message}
+                                    </span>
+                                </div>
+                            </div>;
                 }
             }
+            if(firstTime===0)
+                document.getElementById("textMyAthleteRules").innerHTML = this.state.name+" has got no rules."
+                
         })
     }
 
@@ -285,7 +307,7 @@ export default class DetailsAthlete extends Component {
             <div>
                 <h2>Details</h2>
                 <div className="row">
-                    <div className="col-sm-12 col-md-6 col-lg-6 col-xl-6 my-3">
+                    <div className="col-sm-12 col-md-5 col-lg-5 col-xl-4 my-3">
                         <div className="card">
                             <button className="collapsible">General Info</button>
                             <div className="content">
@@ -301,14 +323,14 @@ export default class DetailsAthlete extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-sm-12 col-md-6 col-lg-6 col-xl-6 my-3">
+                    <div className="col-sm-12 col-md-7 col-lg-7 col-xl-8 my-3">
                         <div className="card">
                             <button className="collapsible">Setted Rules</button>
-                            <div className="content">
+                            <div className="content" id="contentDetailsRules">
                                 <div className="card-body">
                                     <p className="card-text">
-                                        <span className="text-muted"><em>{this.state.name} has got the following rules:</em></span><br />
-                                        <span>{this.showMyRules()}</span>
+                                        <div id="textMyAthleteRules"></div>
+                                        {this.showMyRules()}
                                     </p>
                                 </div>
                             </div>

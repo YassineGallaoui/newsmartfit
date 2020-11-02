@@ -168,8 +168,6 @@ export default class UpdateRule extends Component {
         this.setState({
             currentOp: e.target.value
         })
-        console.log("Valore ricevuto: " + e);
-        console.log("Valore settato: " + this.state.currentOp);
     }
 
     onChangeValue1Condition(e) {
@@ -188,8 +186,6 @@ export default class UpdateRule extends Component {
         this.setState({
             currentLink: e.target.value
         })
-        console.log("hai cambiato valore del link ed è: " + e.target.value)
-        console.log("il valore nello state è: " + this.state.currentLink)
     }
 
     onAddCondition(e) {
@@ -209,7 +205,6 @@ export default class UpdateRule extends Component {
             value1: this.state.currentValue1,
             value2: this.state.currentValue2
         }
-        console.log(newCondition);
         //AGGIORNARE LO STATE DELLE CONDIZIONI
         this.setState({
             conditions: this.state.conditions.concat(newCondition)
@@ -289,7 +284,7 @@ export default class UpdateRule extends Component {
                     className="p-3 mb-2 bg-light"
                     key={currentathleteId}>
                     <em className="">{currentathleteId}</em>
-                    <button className="btn btn-outline-danger btn-sm mx-3" onClick={() => { this.onRemoveAthleteId(currentathleteId) }}>Remove</button>
+                    <button className="btn btn-outline-danger btn-sm mx-3" type="button" onClick={() => { this.onRemoveAthleteId(currentathleteId) }}>Remove</button>
                 </div>
             )
         })
@@ -319,7 +314,7 @@ export default class UpdateRule extends Component {
                         key={currentCondition.type + currentCondition.value1}>
                         {index === 0 ? ("    ") : (<b><em>{currentCondition.link + " "}</em></b>)}
                         <em className="">{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</em>
-                        <button className="btn btn-outline-danger btn-sm mx-3" onClick={() => { this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2) }}>Remove</button>
+                        <button className="btn btn-outline-danger btn-sm mx-3" type="button" onClick={() => { this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2) }}>Remove</button>
                     </div>
                 </span>
             )
@@ -340,20 +335,16 @@ export default class UpdateRule extends Component {
             condition.link = "";
             conditions[0] = condition;
             this.setState({ conditions });
-            console.log(this.state.name);
-            console.log(this.state.conditions);
-            console.log(this.state.message);
 
             //TOLGO IL NOME DAGLI ATHLETES ID
             let athletesId = [...this.state.athletesId];
             for (let p = 0; p < athletesId.length; p++) {
                 let athID = athletesId[p];
-                athID = athID.substring(athID.indexOf("~") + 2);
+                if(athID.indexOf("~")!==-1)
+                    athID = athID.substring(athID.indexOf("~") + 2);
                 athletesId[p] = athID;
             }
-            console.log(athletesId)
             this.state.athletesId = athletesId;
-            console.log("Questa regola è destinata a queste persone: " + this.state.athletesId)
         } catch (error) {
             console.log("nessuna rule settata");
         }
@@ -367,7 +358,6 @@ Do you want to automatically set name?`)) {
                 let numberRule = -1;
                 for (let x = 0; x < arrRules.length; x++) {
                     let nomeRule = arrRules[x].name;
-                    console.log(nomeRule);
                     if (nomeRule.indexOf("Automatic_Rule_Name_") > -1) {
                         let n = nomeRule.substr(20)
                         numberRule = parseInt(n) + 1;
@@ -376,7 +366,6 @@ Do you want to automatically set name?`)) {
                 if (numberRule === -1) numberRule = 0
                 let nuovoNome = "Automatic_Rule_Name_" + numberRule;
                 this.state.name = nuovoNome; //IL METODO THIS.SETSTATE PER QUALCHE MOTIVO NON FUNZIONA!!! DA RISOLVERE POSSIBILMENTE!
-                console.log("il nome è: " + this.state.name);
 
                 const rule = {
                     name: this.state.name,
@@ -385,11 +374,8 @@ Do you want to automatically set name?`)) {
                     message: this.state.message
                 }
 
-                console.log(rule);
-
                 axios.post('/rules/update/' + this.props.match.params.id, rule)
                     .then(res => {
-                        console.log("Rule updated" + res.data);
                         alert("Rule updated!");
                     })
             } else {//ALTRIMENTI ESCO COSÌ L'UTENTE PUÒ SETTARE IL NOME CHE VUOLE
@@ -404,14 +390,12 @@ Do you want to automatically set name?`)) {
                 message: this.state.message
             }
 
-            console.log(rule);
-
             axios.post('/rules/update/' + this.props.match.params.id, rule)
                 .then(res => {
-                    console.log("Rule updated" + res.data);
                     alert("Rule updated!");
                 })
         }
+        this.controllaNomi();
     }
 
     render() {

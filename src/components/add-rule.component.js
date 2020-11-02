@@ -259,7 +259,7 @@ export default class AddRule extends Component {
                     className="p-3 mb-2 bg-light"
                     key={currentathleteId}>
                     <em className="">{currentathleteId}</em>
-                    <button className="btn btn-outline-danger btn-sm mx-3" onClick={() => { this.onRemoveAthleteId(currentathleteId) }}>Remove</button>
+                    <button type="button" className="btn btn-outline-danger btn-sm mx-3" onClick={() => { this.onRemoveAthleteId(currentathleteId) }}>Remove</button>
                 </div>
             )
         })
@@ -289,7 +289,7 @@ export default class AddRule extends Component {
                         key={currentCondition.type + currentCondition.value1}>
                         {index === 0 ? ("    ") : (<b><em>{currentCondition.link + " "}</em></b>)}
                         <em className="">{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</em>
-                        <button className="btn btn-outline-danger btn-sm mx-3" onClick={() => { this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2) }}>Remove</button>
+                        <button type="button" className="btn btn-outline-danger btn-sm mx-3" onClick={() => { this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2) }}>Remove</button>
                     </div>
                 </span>
             )
@@ -300,7 +300,7 @@ export default class AddRule extends Component {
         e.preventDefault();
 
         if (this.state.conditions.length === 0) {
-            alert("Insert at least one value in the condition!");
+            alert("Insert at least one condition!");
             return;
         }
 
@@ -319,7 +319,8 @@ export default class AddRule extends Component {
             let athletesId = [...this.state.athletesId];
             for (let p = 0; p < athletesId.length; p++) {
                 let athID = athletesId[p];
-                athID = athID.substring(athID.indexOf("~") + 2);
+                if(athID.indexOf("~")!==-1)
+                    athID = athID.substring(athID.indexOf("~") + 2);
                 athletesId[p] = athID;
             }
             console.log(athletesId)
@@ -495,7 +496,6 @@ Do you want to automatically set name?`)) {
                             </select>
                             {/* primo valore */}
                             <input type="number"
-                                required
                                 className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mx-3"
                                 id="selectVal1"
                                 value={this.state.value1}
