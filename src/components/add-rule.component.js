@@ -145,8 +145,15 @@ export default class AddRule extends Component {
             document.getElementById("selectVal1").style.display = "none";
             document.getElementById("selectVal2").style.display = "none";
             document.getElementById("selectValMood").style.display = "block";
-            if (this.state.currentOp === "between")
+            this.setState({
+                currentValue1: "Really Bad"
+            })
+            if (this.state.currentOp === "between") {
                 document.getElementById("selectSecondValMood").style.display = "block";
+                this.setState({
+                    currentValue2: "Really Bad"
+                })
+            }
         } else {
             document.getElementById("selectValMood").style.display = "none";
             document.getElementById("selectSecondValMood").style.display = "none";
@@ -155,7 +162,6 @@ export default class AddRule extends Component {
                 document.getElementById("selectVal2").style.display = "block";
         }
         this.setState({
-            currentValue1: "Really Bad",
             currentType: e.target.value
         })
     }
