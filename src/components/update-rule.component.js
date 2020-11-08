@@ -285,7 +285,7 @@ export default class UpdateRule extends Component {
                     className="p-3 mb-2 bg-light"
                     key={currentathleteId}>
                     <em className="">{currentathleteId}</em>
-                    <button className="btn btn-outline-danger btn-sm mx-3" type="button" onClick={() => { this.onRemoveAthleteId(currentathleteId) }}>Remove</button>
+                    <button className="btn btn-outline-danger btn-sm ml-4" type="button" onClick={() => { this.onRemoveAthleteId(currentathleteId) }}>Remove</button>
                 </div>
             )
         })
@@ -315,7 +315,7 @@ export default class UpdateRule extends Component {
                         key={currentCondition.type + currentCondition.value1}>
                         {index === 0 ? ("    ") : (<b><em>{currentCondition.link + " "}</em></b>)}
                         <em className="">{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</em>
-                        <button className="btn btn-outline-danger btn-sm mx-3" type="button" onClick={() => { this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2) }}>Remove</button>
+                        <button className="btn btn-outline-danger btn-sm ml-4" type="button" onClick={() => { this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2) }}>Remove</button>
                     </div>
                 </span>
             )
@@ -422,7 +422,7 @@ Do you want to automatically set name?`)) {
                             type="text"
                             className="mb-2 form-inline">
                             <select required
-                                className="form-control col-sm-12 col-md-6 col-lg-6 col-xl-6 mr-3"
+                                className="form-control col-sm-8 col-md-6 col-lg-6 col-xl-6 mr-3"
                                 ref={this.myRef}>
                                 <option
                                     value="noneSelected">
@@ -440,7 +440,7 @@ Do you want to automatically set name?`)) {
                                 }
                             </select>
                             <button type="button"
-                                class="btn btn-success mx-3"
+                                class="btn btn-success mr-4"
                                 onClick={() => { this.onAddAthleteId() }}>
                                 Add
                             </button>
@@ -497,8 +497,8 @@ Do you want to automatically set name?`)) {
                                 <option value="Activity distance">Activity distance (minutes)</option>
                                 <option value="Burned calories">Burned calories (Kcal)</option>
                                 <option value="Steps">Steps (number)</option>
-                            </select> is
-                            <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mx-3"
+                            </select> <span className="mr-4">is</span>
+                            <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4"
                                 id="selectOp"
                                 onChange={this.onChangeOperator}>
                                 <option value="equal to"> = equal to</option>
@@ -509,20 +509,20 @@ Do you want to automatically set name?`)) {
                             </select>
                             {/* primo valore */}
                             <input type="number"
-                                className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mx-3"
+                                className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4"
                                 id="selectVal1"
                                 value={this.state.value1}
                                 onChange={this.onChangeValue1Condition}
                             ></input>
                             {/* secondo valore */}
                             <input type="number"
-                                className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mx-3"
+                                className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4"
                                 id="selectVal2"
                                 value={this.state.value2}
                                 onChange={this.onChangeValue2Condition}
                             ></input>
                             {/* nel caso si parli di mood */}
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mx-3"
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
                                 id="selectValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue1Condition}>
@@ -533,7 +533,7 @@ Do you want to automatically set name?`)) {
                                 <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
                             </select>
                             <button type="button"
-                                class="btn btn-success mx-3"
+                                class="btn btn-success mr-4"
                                 onClick={() => { this.onAddCondition() }}>
                                 Add
                             </button>

@@ -507,7 +507,7 @@ Do you want to automatically set name?`)) {
                             type="text"
                             className="mb-2 form-inline">
                             <select required
-                                className="form-control col-sm-12 col-md-6 col-lg-6 col-xl-6 mr-3"
+                                className="form-control col-8 col-sm-6 col-md-6 col-lg-6 col-xl-6 mr-4"
                                 ref={this.myRef}>
                                 <option
                                     value="noneSelected">
@@ -525,7 +525,7 @@ Do you want to automatically set name?`)) {
                                 }
                             </select>
                             <button type="button"
-                                class="btn btn-success ml-4"
+                                class="btn btn-success"
                                 onClick={() => { this.onAddAthleteId() }}>
                                 Add
                             </button>
@@ -646,7 +646,7 @@ Do you want to automatically set name?`)) {
                         <h6><label>Temporal Conditions</label></h6>
                         {this.newTemporalConditionsList()}
                         <span id="temporalLinkSelection">
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-3"
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
                                 id="selectTemporalLink"
                                 title="Scegli una opzione"
                                 defaultValue="and"
