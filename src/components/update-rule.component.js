@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Emoji from 'a11y-react-emoji'
 let exampleText = `You should:
         - first tip
         - second tip
@@ -525,11 +526,11 @@ Do you want to automatically set name?`)) {
                                 id="selectValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue1Condition}>
-                                <option value="Really Bad">Really Bad <span role="img" aria-label="Really Bad">☹️</span></option>
-                                <option value="Bad">Bad <span role="img" aria-label="Bad">😕</span></option>
-                                <option value="Normal">Normal <span role="img" aria-label="Normal">😐</span></option>
-                                <option value="Good">Good <span role="img" aria-label="Good">🙂</span></option>
-                                <option value="Really Good">Really Good <span role="img" aria-label="Really Good">😃</span></option>
+                                <option value="Really Bad">Really Bad <Emoji symbol="☹️" label="Really Bad" /></option>
+                                <option value="Bad">Bad <Emoji symbol="😕" label="Bad" /></option>
+                                <option value="Normal">Normal <Emoji symbol="😐" label="Normal" /></option>
+                                <option value="Good">Good <Emoji symbol="🙂" label="Good" /></option>
+                                <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
                             </select>
                             <button type="button"
                                 class="btn btn-success mx-3"

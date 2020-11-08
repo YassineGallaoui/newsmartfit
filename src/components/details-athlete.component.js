@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Emoji from 'a11y-react-emoji'
 import Chart from "./charts.component"
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
@@ -295,11 +296,11 @@ export default class DetailsAthlete extends Component {
     }
 
     setEmoticon(number) {
-        if (number === 1) return <span role="img" aria-label="Really Bad" >☹️</span>;
-        if (number === 2) return <span role="img" aria-label="Bad" >😕</span>;
-        if (number === 3) return <span role="img" aria-label="Normal" >😐</span>;
-        if (number === 4) return <span role="img" aria-label="Good" >🙂</span>;
-        if (number === 5) return <span role="img" aria-label="Really Good" >😃</span>;
+        if (number === 0) return <Emoji symbol="☹️" label="Really Bad" />;
+        if (number === 1) return <Emoji symbol="😕" label="Bad" />;
+        if (number === 2) return <Emoji symbol="😐" label="Normal" />;
+        if (number === 3) return <Emoji symbol="🙂" label="Good" />;
+        if (number === 4) return <Emoji symbol="😃" label="Really Good" />;
     }
 
     render() {

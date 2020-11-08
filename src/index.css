@@ -88,5 +88,10 @@ body {
 
 #selectValMood {display: none;}
 
+#selectSecondValMood {display: none;}
+
+#selectTemporalVal2 {display: none;}
+
 /* IN ADD AND UPDATE RULES */
 #linkSelection {display: none;}
+#temporalLinkSelection {display: none;}
