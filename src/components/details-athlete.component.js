@@ -127,6 +127,14 @@ export default class DetailsAthlete extends Component {
                                             })
                                         }
                                     </ul>
+                                    <label>Temporal Conditions</label>
+                                    <ul>
+                                        {
+                                            currentRule.temporalConditions.map(currentTemporalCondition => {
+                                                return <li><b>{currentTemporalCondition.temporalLink}</b>{` "` + currentTemporalCondition.temporalItem + `" `}<b>{currentTemporalCondition.temporalOperator}</b>{` "` + currentTemporalCondition.temporalValue1 + `" ` + (currentTemporalCondition.temporalValue2 === "" ? "" : (`and "` + currentTemporalCondition.temporalValue2 + `"`))}</li>;
+                                            })
+                                        }
+                                    </ul>
                                     <label>Message</label><br />
                                     <span>
                                         {currentRule.message}
@@ -514,7 +522,7 @@ export default class DetailsAthlete extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 my-3">
                         <div className="card">
-                            <button className="collapsible">Attività</button>
+                            <button className="collapsible">Activity</button>
                             <div className="content">
                                 <div className="card-body">
                                     <div className="row" id="activitySection">
@@ -593,7 +601,7 @@ export default class DetailsAthlete extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 my-3">
                         <div className="card">
-                            <button className="collapsible">Corpo</button>
+                            <button className="collapsible">Body</button>
                             <div className="content">
                                 <div className="card-body">
                                     <div className="row" id="activitySection">
@@ -646,7 +654,7 @@ export default class DetailsAthlete extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 my-3">
                         <div className="card">
-                            <button className="collapsible">Alimentazione</button>
+                            <button className="collapsible">Nutrition</button>
                             <div className="content">
                                 <div className="card-body">
                                     <div className="row" id="activitySection">
@@ -725,7 +733,7 @@ export default class DetailsAthlete extends Component {
                 <div className="row">
                     <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 my-3">
                         <div className="card">
-                            <button className="collapsible">Sonno</button>
+                            <button className="collapsible">Sleep</button>
                             <div className="content">
                                 <div className="card-body">
                                     <div className="row" id="activitySection">

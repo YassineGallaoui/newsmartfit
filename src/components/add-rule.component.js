@@ -615,7 +615,7 @@ Do you want to automatically set name?`)) {
                         <h6><label>Setted Conditions</label></h6>
                         {this.newConditionsList()}
                         <span id="linkSelection">
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
+                            <select className="form-control col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3 mr-4"
                                 id="selectLink"
                                 title="Scegli una opzione"
                                 defaultValue="and"
@@ -624,8 +624,8 @@ Do you want to automatically set name?`)) {
                                 <option value="or">OR</option>
                             </select>
                         </span>
-                        <div className="form-inline mt-4">
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
+                        <div className="form-inline mt-2">
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4 my-2"
                                 id="selectCondition"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeType}>
@@ -649,7 +649,7 @@ Do you want to automatically set name?`)) {
                                 <option value="Burned calories">Burned calories (Kcal)</option>
                                 <option value="Steps">Steps (number)</option>
                             </select> <span className="mr-4">is</span>
-                            <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4"
+                            <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4 my-2"
                                 id="selectOp"
                                 onChange={this.onChangeOperator}>
                                 <option value="equal to"> = equal to</option>
@@ -660,20 +660,20 @@ Do you want to automatically set name?`)) {
                             </select>
                             {/* primo valore */}
                             <input type="number"
-                                className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4"
+                                className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4 my-2"
                                 id="selectVal1"
                                 value={this.state.value1}
                                 onChange={this.onChangeValue1Condition}
                             ></input>
                             {/* secondo valore */}
                             <input type="number"
-                                className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4"
+                                className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4 my-2"
                                 id="selectVal2"
                                 value={this.state.value2}
                                 onChange={this.onChangeValue2Condition}
                             ></input>
                             {/*primo valore nel caso si parli di mood */}
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4 my-2"
                                 id="selectValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue1Condition}>
@@ -684,7 +684,7 @@ Do you want to automatically set name?`)) {
                                 <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
                             </select>
                             {/*secondo valore nel caso si parli di mood */}
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4 my-2"
                                 id="selectSecondValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue2Condition}>
@@ -696,7 +696,7 @@ Do you want to automatically set name?`)) {
                             </select>
 
                             <button type="button"
-                                class="btn btn-success mr-4"
+                                class="btn btn-success mr-4 my-2"
                                 onClick={() => { this.onAddCondition() }}>
                                 Add
                             </button>
@@ -706,13 +706,13 @@ Do you want to automatically set name?`)) {
                     </div>
 
 
-                    <div className="h4 text-center mt-4 p-3 rounded text-white bg-info">3 ~ Temporal conditions</div>
+                    <div className="h4 text-center mt-5 p-3 rounded text-white bg-info">3 ~ Temporal conditions</div>
 
                     <div className="form-group mb-3">
                         <h6><label>Temporal Conditions</label></h6>
                         {this.newTemporalConditionsList()}
                         <span id="temporalLinkSelection">
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
+                            <select className="form-control col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3 mr-4"
                                 id="selectTemporalLink"
                                 title="Scegli una opzione"
                                 defaultValue="and"
@@ -721,8 +721,8 @@ Do you want to automatically set name?`)) {
                                 <option value="or">OR</option>
                             </select>
                         </span>
-                        <div className="form-inline mt-4">
-                            <select className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4"
+                        <div className="form-inline mt-2">
+                            <select className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4 my-2"
                                 id="selectTemporalCondition"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeTemporalItem}>
@@ -736,7 +736,7 @@ Do you want to automatically set name?`)) {
                                     )
                                 })}
                             </select>
-                            <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4"
+                            <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4 my-2"
                                 id="selectOpTemporal"
                                 onChange={this.onChangeTemporalOperator}>
                                 <option value="starts with"> starts with</option>
@@ -750,7 +750,7 @@ Do you want to automatically set name?`)) {
                             </select>
                             {/* primo valore */}
                             <select
-                                className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4"
+                                className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4 my-2"
                                 id="selectTemporalVal1"
                                 title="Choose first element"
                                 onChange={this.onChangeValue1TemporalCondition}>
@@ -766,7 +766,7 @@ Do you want to automatically set name?`)) {
                             </select>
                             {/* secondo valore */}
                             <select
-                                className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4"
+                                className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4 my-2"
                                 id="selectTemporalVal2"
                                 title="select second element"
                                 onChange={this.onChangeValue2TemporalCondition}>
@@ -781,14 +781,14 @@ Do you want to automatically set name?`)) {
                                 })}
                             </select>
                             <button type="button"
-                                class="btn btn-success mr-4"
+                                class="btn btn-success mr-4 my-2"
                                 onClick={() => { this.onAddTemporalCondition() }}>
                                 Add
                             </button>
                         </div>
                     </div>
 
-                    <div className="my-5 text-center">
+                    <div className="my-4 text-center">
                         <input type="submit"
                             value="Create Rule"
                             className="btn btn-primary btn-lg">
