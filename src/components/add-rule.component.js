@@ -677,11 +677,11 @@ Do you want to automatically set name?`)) {
                                 id="selectValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue1Condition}>
-                                <option value="Really Bad">Really Bad <Emoji symbol="☹️"/></option>
-                                <option value="Bad">Bad <Emoji symbol="😕"/></option>
-                                <option value="Normal">Normal <Emoji symbol="😐"/></option>
-                                <option value="Good">Good <Emoji symbol="🙂"/></option>
-                                <option value="Really Good">Really Good <Emoji symbol="😃"/></option>
+                                <option value="Really Bad">Really Bad</option>
+                                <option value="Bad">Bad</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Good">Good</option>
+                                <option value="Really Good">Really Good</option>
                             </select>
                             {/*secondo valore nel caso si parli di mood */}
                             <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4 my-2"
@@ -689,11 +689,11 @@ Do you want to automatically set name?`)) {
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue2Condition}>
                                     
-                                <option value="Really Bad">Really Bad <Emoji symbol="☹️"/></option>
-                                <option value="Bad">Bad <Emoji symbol="😕"/></option>
-                                <option value="Normal">Normal <Emoji symbol="😐"/></option>
-                                <option value="Good">Good <Emoji symbol="🙂"/></option>
-                                <option value="Really Good">Really Good <Emoji symbol="😃"/></option>
+                                <option value="Really Bad">Really Bad</option>
+                                <option value="Bad">Bad</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Good">Good</option>
+                                <option value="Really Good">Really Good</option>
                             </select>
 
                             <button type="button"

@@ -708,22 +708,22 @@ Do you want to automatically set name?`)) {
                                 id="selectValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue1Condition}>
-                                <option value="Really Bad">Really Bad <Emoji symbol="☹️" label="Really Bad" /></option>
-                                <option value="Bad">Bad <Emoji symbol="😕" label="Bad" /></option>
-                                <option value="Normal">Normal <Emoji symbol="😐" label="Normal" /></option>
-                                <option value="Good">Good <Emoji symbol="🙂" label="Good" /></option>
-                                <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
+                                <option value="Really Bad">Really Bad</option>
+                                <option value="Bad">Bad</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Good">Good</option>
+                                <option value="Really Good">Really Good</option>
                             </select>
                             {/*secondo valore nel caso si parli di mood */}
                             <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4 my-2"
                                 id="selectSecondValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue2Condition}>
-                                <option value="Really Bad">Really Bad <Emoji symbol="☹️" label="Really Bad" /></option>
-                                <option value="Bad">Bad <Emoji symbol="😕" label="Bad" /></option>
-                                <option value="Normal">Normal <Emoji symbol="😐" label="Normal" /></option>
-                                <option value="Good">Good <Emoji symbol="🙂" label="Good" /></option>
-                                <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
+                                <option value="Really Bad">Really Bad</option>
+                                <option value="Bad">Bad</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Good">Good</option>
+                                <option value="Really Good">Really Good</option>
                             </select>
 
                             <button type="button"
