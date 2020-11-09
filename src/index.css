@@ -29,6 +29,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* PER RENDERE RESPONSIVE GRAFICI */
+canvas{height:100%; height: auto;}
+
+
 /* ALL CARDS */
 .collapsible {
   background-color: #777;

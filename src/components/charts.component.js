@@ -40,7 +40,8 @@ class charts extends Component {
                 },
                 legend: {
                     display: false
-                }
+                },
+                maintainAspectRatio : false
             }
         }
     }
@@ -278,7 +279,8 @@ class charts extends Component {
                     title: {
                         display: true,
                         text: titolo
-                    }
+                    },
+                    maintainAspectRatio : false
                 }
             })
 
@@ -324,8 +326,9 @@ class charts extends Component {
                             fontSize: 20
                         },
                         legend: {
-                            display: true
-                        }
+                            display: false
+                        },
+                        maintainAspectRatio : false
                     }
                 })
             }
@@ -355,7 +358,8 @@ class charts extends Component {
                         },
                         legend: {
                             display: false
-                        }
+                        },
+                        maintainAspectRatio : false
                     }
                 })
             }
@@ -427,7 +431,8 @@ class charts extends Component {
                         },
                         legend: {
                             display: false
-                        }
+                        },
+                        maintainAspectRatio : false
                     }
                 })
             }
@@ -468,8 +473,9 @@ class charts extends Component {
                             fontSize: 20
                         },
                         legend: {
-                            display: true
-                        }
+                            display: false
+                        },
+                        maintainAspectRatio : false
                     }
                 })
             }

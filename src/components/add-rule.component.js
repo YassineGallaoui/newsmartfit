@@ -615,7 +615,7 @@ Do you want to automatically set name?`)) {
                         <h6><label>Setted Conditions</label></h6>
                         {this.newConditionsList()}
                         <span id="linkSelection">
-                            <select className="form-control col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3 mr-4"
+                            <select className="form-control col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3 mr-4 my-2"
                                 id="selectLink"
                                 title="Scegli una opzione"
                                 defaultValue="and"
@@ -677,22 +677,23 @@ Do you want to automatically set name?`)) {
                                 id="selectValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue1Condition}>
-                                <option value="Really Bad">Really Bad <Emoji symbol="☹️" label="Really Bad" /></option>
-                                <option value="Bad">Bad <Emoji symbol="😕" label="Bad" /></option>
-                                <option value="Normal">Normal <Emoji symbol="😐" label="Normal" /></option>
-                                <option value="Good">Good <Emoji symbol="🙂" label="Good" /></option>
-                                <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
+                                <option value="Really Bad">Really Bad <Emoji symbol="☹️"/></option>
+                                <option value="Bad">Bad <Emoji symbol="😕"/></option>
+                                <option value="Normal">Normal <Emoji symbol="😐"/></option>
+                                <option value="Good">Good <Emoji symbol="🙂"/></option>
+                                <option value="Really Good">Really Good <Emoji symbol="😃"/></option>
                             </select>
                             {/*secondo valore nel caso si parli di mood */}
                             <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4 my-2"
                                 id="selectSecondValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue2Condition}>
-                                <option value="Really Bad">Really Bad <Emoji symbol="☹️" label="Really Bad" /></option>
-                                <option value="Bad">Bad <Emoji symbol="😕" label="Bad" /></option>
-                                <option value="Normal">Normal <Emoji symbol="😐" label="Normal" /></option>
-                                <option value="Good">Good <Emoji symbol="🙂" label="Good" /></option>
-                                <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
+                                    
+                                <option value="Really Bad">Really Bad <Emoji symbol="☹️"/></option>
+                                <option value="Bad">Bad <Emoji symbol="😕"/></option>
+                                <option value="Normal">Normal <Emoji symbol="😐"/></option>
+                                <option value="Good">Good <Emoji symbol="🙂"/></option>
+                                <option value="Really Good">Really Good <Emoji symbol="😃"/></option>
                             </select>
 
                             <button type="button"
@@ -712,7 +713,7 @@ Do you want to automatically set name?`)) {
                         <h6><label>Temporal Conditions</label></h6>
                         {this.newTemporalConditionsList()}
                         <span id="temporalLinkSelection">
-                            <select className="form-control col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3 mr-4"
+                            <select className="form-control col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3 mr-4 my-2"
                                 id="selectTemporalLink"
                                 title="Scegli una opzione"
                                 defaultValue="and"
