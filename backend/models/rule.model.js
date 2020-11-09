@@ -10,11 +10,20 @@ var conditionsSchema = new Schema({
 	value2 : String
   });
 
+/* var temporalConditionsSchema = new Schema({
+	link : String,
+	operator : String,
+	type: String,
+	value1 : String,
+	value2 : String
+  }); */
+
 const ruleSchema = new Schema({
 	name: String,
+	message: String,
 	athletesId: [String],
-	conditions: [conditionsSchema],
-	message: String
+	conditions: [conditionsSchema]
+	/* temporalConditions: [temporalConditionsSchema] */
 })
 
 const rule = mongoose.model('rules', ruleSchema);
