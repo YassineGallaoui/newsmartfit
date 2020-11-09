@@ -22,10 +22,12 @@ router.route('/add').post((req,res) => {
     const name = req.body.name;
     const message = req.body.message;
     const conditions = req.body.conditions;
+    const temporalConditions = req.body.temporalConditions;
     const newRule = new Rules({
         name,
         athletesId,
         conditions,
+        temporalConditions,
         message
     });
 
@@ -42,6 +44,7 @@ router.route('/update/:id').post((req,res) => {
         rules.name = req.body.name;
         rules.message = req.body.message;
         rules.conditions = req.body.conditions;
+        rules.temporalConditions = req.body.temporalConditions;
 
         rules.save()
         .then(() => res.json('Rule updated!'))

@@ -481,13 +481,6 @@ export default class AddRule extends Component {
             conditions[0] = condition;
             this.setState({ conditions });
 
-            //TOLGO IL LINK DALLA PRIMA TEMPORAL CONDITION, PERCHÈ NON SERVE
-            let temporalConditions = [...this.state.temporalConditions];
-            let temporalCondition = temporalConditions[0];
-            temporalCondition.link = "";
-            temporalConditions[0] = temporalCondition;
-            this.setState({ temporalConditions });
-
             //TOLGO IL NOME DAGLI ATHLETES ID
             let athletesId = [...this.state.athletesId];
             for (let p = 0; p < athletesId.length; p++) {
@@ -499,7 +492,18 @@ export default class AddRule extends Component {
             this.state.athletesId = athletesId;
             console.log("Questa regola è destinata a queste persone: " + this.state.athletesId)
         } catch (error) {
-            console.log("nessuna rule settata");
+            console.log("errore onSubmit");
+        }
+
+        try {
+            //TOLGO IL LINK DALLA PRIMA TEMPORAL CONDITION, PERCHÈ NON SERVE
+            let temporalConditions = [...this.state.temporalConditions];
+            let temporalCondition = temporalConditions[0];
+            temporalCondition.temporalLink = "";
+            temporalConditions[0] = temporalCondition;
+            this.setState({ temporalConditions });
+        } catch (error) {
+            console.log("errore onSubmit");
         }
 
 
@@ -521,12 +525,13 @@ Do you want to automatically set name?`)) {
                 if (numberRule === -1) numberRule = 0
                 let nuovoNome = "Automatic_Rule_Name_" + numberRule;
                 this.state.name = nuovoNome; //IL METODO THIS.SETSTATE PER QUALCHE MOTIVO NON FUNZIONA!!! DA RISOLVERE POSSIBILMENTE!
-                console.log("il nome è: " + this.state.name);
+                console.log("regole temporali: " + this.state.temporalConditions);
 
                 const rule = {
                     name: this.state.name,
                     athletesId: this.state.athletesId,
                     conditions: this.state.conditions,
+                    temporalConditions: this.state.temporalConditions,
                     message: this.state.message
                 }
 
@@ -546,6 +551,7 @@ Do you want to automatically set name?`)) {
                 name: this.state.name,
                 athletesId: this.state.athletesId,
                 conditions: this.state.conditions,
+                temporalConditions: this.state.temporalConditions,
                 message: this.state.message
             }
 
@@ -655,7 +661,7 @@ Do you want to automatically set name?`)) {
                                 <option value="Sleep latency">Sleep latency (minutes)</option>
                                 <option value="Sleep awakening">Sleep awakenings (number)</option>
                                 <option value="Activity duration">Activity duration (minutes)</option>
-                                <option value="Activity distance">Activity distance (minutes)</option>
+                                <option value="Activity distance">Activity distance (km)</option>
                                 <option value="Burned calories">Burned calories (Kcal)</option>
                                 <option value="Steps">Steps (number)</option>
                             </select> <span className="mr-4">is</span>
@@ -718,7 +724,7 @@ Do you want to automatically set name?`)) {
 
                     <div className="h4 text-center mt-4 p-3 rounded text-white bg-info">3 ~ Temporal conditions</div>
 
-                    <div className="form-group">
+                    <div className="form-group mb-3">
                         <h6><label>Temporal Conditions</label></h6>
                         {this.newTemporalConditionsList()}
                         <span id="temporalLinkSelection">
@@ -798,10 +804,10 @@ Do you want to automatically set name?`)) {
                         </div>
                     </div>
 
-                    <div className="my-4">
+                    <div className="my-5 text-center">
                         <input type="submit"
                             value="Create Rule"
-                            className="btn btn-primary">
+                            className="btn btn-primary btn-lg">
                         </input>
                     </div>
                 </form>
