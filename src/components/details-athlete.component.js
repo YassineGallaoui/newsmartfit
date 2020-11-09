@@ -353,7 +353,7 @@ export default class DetailsAthlete extends Component {
                             <div className="card-body py-3">
                                 <div className="row">
                                     <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                        <span className="mr-3">If you want, filter graphs by date range:</span>
+                                        <span className="mx-3 d-block d-md-inline mb-2">If you want, filter graphs by date range:</span>
                                         <span className="d-inline-block">
                                             <DatePicker
                                                 renderCustomHeader={({
