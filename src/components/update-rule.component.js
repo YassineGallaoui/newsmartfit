@@ -24,6 +24,13 @@ export default class UpdateRule extends Component {
         this.onChangeValue2Condition = this.onChangeValue2Condition.bind(this);
         this.onChangelink = this.onChangelink.bind(this);
         //this.filterAthletes = this.filterAthletes.bind(this);
+        this.onChangeTemporalItem = this.onChangeTemporalItem.bind(this);
+        this.onChangeTemporalOperator = this.onChangeTemporalOperator.bind(this);
+        this.onChangeValue1TemporalCondition = this.onChangeValue1TemporalCondition.bind(this);
+        this.onChangeValue2TemporalCondition = this.onChangeValue2TemporalCondition.bind(this);
+        this.onChangeTemporalLink = this.onChangeTemporalLink.bind(this);
+        this.onAddTemporalCondition = this.onAddTemporalCondition.bind(this);
+        this.onRemoveTemporalCondition = this.onRemoveTemporalCondition.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
         this.myRef = React.createRef();
@@ -41,6 +48,12 @@ export default class UpdateRule extends Component {
             currentType: 'Calories Intake (All Day)',
             currentValue1: '',
             currentValue2: '',
+            temporalConditions: [],
+            currentTemporalLink: 'and',
+            currentTemporalOp: 'starts with',
+            currentTemporalItem: 'select temporal item',
+            currentTemporalValue1: '',
+            currentTemporalValue2: '',
             message: exampleText,
             alreadyExistingRules: [{}] //REGOLE GIÀ ESISTENTI PER POTER SETTARE IL NOME AUTOMATICO, SE SERVE
         }
@@ -53,7 +66,8 @@ export default class UpdateRule extends Component {
                     athletesId: response.data.athletesId,
                     name: response.data.name,
                     message: response.data.message,
-                    conditions: response.data.conditions
+                    conditions: response.data.conditions,
+                    temporalConditions: response.data.temporalConditions
                 })
             })
             .catch(function (error) {
@@ -129,6 +143,20 @@ export default class UpdateRule extends Component {
             })
     }
 
+    newAthletesList() {
+        return this.state.athletesId.map(currentathleteId => {
+            return (
+                <div
+                    type="text"
+                    className="p-3 mb-2 bg-light"
+                    key={currentathleteId}>
+                    <em>{currentathleteId}</em>
+                    <button type="button" className="btn btn-outline-danger btn-sm ml-4" onClick={() => { this.onRemoveAthleteId(currentathleteId) }}>Remove</button>
+                </div>
+            )
+        })
+    }
+
     onChangeName(e) {
         this.setState({
             name: e.target.value
@@ -141,27 +169,61 @@ export default class UpdateRule extends Component {
         })
     }
 
+    ///////////////////////
+    /* NORMAL CONDITIONS */
+    ///////////////////////
     onChangeType(e) {
         if (e.target.value === "Mood") {
             document.getElementById("selectVal1").style.display = "none";
             document.getElementById("selectVal2").style.display = "none";
             document.getElementById("selectValMood").style.display = "block";
+            this.setState({
+                currentValue1: "Really Bad"
+            })
+            if (this.state.currentOp === "between") {
+                document.getElementById("selectSecondValMood").style.display = "block";
+                this.setState({
+                    currentValue2: "Really Bad"
+                })
+            }
         } else {
             document.getElementById("selectValMood").style.display = "none";
+            document.getElementById("selectSecondValMood").style.display = "none";
             document.getElementById("selectVal1").style.display = "block";
-            document.getElementById("selectVal2").style.display = "block";
+            if (this.state.currentOp === "between")
+                document.getElementById("selectVal2").style.display = "block";
         }
         this.setState({
-            currentValue1: "Really Bad",
             currentType: e.target.value
         })
     }
 
     onChangeOperator(e) {
-        if (e.target.value === "between")
-            document.getElementById("selectVal2").style.display = "block";
-        else {
-            document.getElementById("selectVal2").style.display = "none";
+        if (e.target.value === "between") {
+            if (this.state.currentType === "Mood") {
+                document.getElementById("selectVal1").style.display = "none";
+                document.getElementById("selectVal2").style.display = "none";
+                document.getElementById("selectValMood").style.display = "block";
+                document.getElementById("selectSecondValMood").style.display = "block";
+            }
+            else {
+                document.getElementById("selectVal1").style.display = "block";
+                document.getElementById("selectVal2").style.display = "block";
+                document.getElementById("selectValMood").style.display = "none";
+                document.getElementById("selectSecondValMood").style.display = "none";
+            }
+        } else {
+            if (this.state.currentType === "Mood") {
+                document.getElementById("selectVal1").style.display = "none";
+                document.getElementById("selectVal2").style.display = "none";
+                document.getElementById("selectValMood").style.display = "block";
+                document.getElementById("selectSecondValMood").style.display = "none";
+            } else {
+                document.getElementById("selectVal1").style.display = "block";
+                document.getElementById("selectVal2").style.display = "none";
+                document.getElementById("selectValMood").style.display = "none";
+                document.getElementById("selectSecondValMood").style.display = "none";
+            }
             this.setState({
                 currentValue2: ""
             })
@@ -277,19 +339,6 @@ export default class UpdateRule extends Component {
             }
         } */
 
-    newAthletesList() {
-        return this.state.athletesId.map(currentathleteId => {
-            return (
-                <div
-                    type="text"
-                    className="p-3 mb-2 bg-light"
-                    key={currentathleteId}>
-                    <em className="">{currentathleteId}</em>
-                    <button className="btn btn-outline-danger btn-sm ml-4" type="button" onClick={() => { this.onRemoveAthleteId(currentathleteId) }}>Remove</button>
-                </div>
-            )
-        })
-    }
 
     newConditionsList() {
         if (this.state.conditions.length === 0) {
@@ -314,8 +363,128 @@ export default class UpdateRule extends Component {
                         className="p-3 mb-2 bg-light"
                         key={currentCondition.type + currentCondition.value1}>
                         {index === 0 ? ("    ") : (<b><em>{currentCondition.link + " "}</em></b>)}
-                        <em className="">{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</em>
-                        <button className="btn btn-outline-danger btn-sm ml-4" type="button" onClick={() => { this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2) }}>Remove</button>
+                        <em>{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</em>
+                        <button type="button" className="btn btn-outline-danger btn-sm ml-4" onClick={() => { this.onRemoveCondition(currentCondition.type, currentCondition.op, currentCondition.value1, currentCondition.value2) }}>Remove</button>
+                    </div>
+                </span>
+            )
+        })
+    }
+
+    /////////////////////////
+    /* TEMPORAL CONDITIONS */
+    /////////////////////////
+    onChangeTemporalItem(e) {
+        if (e.target.value === this.state.currentTemporalValue1) {
+            this.setState({
+                currentTemporalValue1: ""
+            })
+        }
+        this.setState({
+            currentTemporalItem: e.target.value
+        })
+    }
+
+    onChangeTemporalOperator(e) {
+        if (e.target.value === "starts between" || e.target.value === "ends between") {
+            document.getElementById("selectTemporalVal2").style.display = "block";
+        } else {
+            document.getElementById("selectTemporalVal2").style.display = "none";
+            this.setState({
+                currentTemporalValue2: ""
+            })
+        }
+        this.setState({
+            currentTemporalOp: e.target.value
+        })
+    }
+
+    onChangeValue1TemporalCondition(e) {
+        if (e.target.value === this.state.currentTemporalValue2) {
+            this.setState({
+                currentTemporalValue2: ""
+            })
+        }
+        this.setState({
+            currentTemporalValue1: e.target.value
+        })
+    }
+
+    onChangeValue2TemporalCondition(e) {
+        this.setState({
+            currentTemporalValue2: e.target.value
+        })
+    }
+
+    onChangeTemporalLink(e) {
+        this.setState({
+            currentTemporalLink: e.target.value
+        })
+    }
+
+    onAddTemporalCondition() {
+        // CREARE COMPONENTI DELLA CONDIZIONE TEMPORALE
+        if (this.state.currentTemporalItem === "select temporal item") {
+            alert("You have to choose temporal item to make comparison!")
+            return;
+        }
+        if (this.state.currentTemporalValue1 === "") {
+            alert("Insert at least one value in the temporal condition!")
+            return;
+        }
+        if ((this.state.currentTemporalOp === "starts between" || this.state.currentTemporalOp === "ends between") && (this.state.currentTemporalValue1 === "" || this.state.currentTemporalValue2 === "")) {
+            alert("If you select between operation, you must also insert two values!")
+            return;
+        }
+        let newTemporalCondition = {
+            temporalLink: this.state.currentTemporalLink,
+            temporalOperator: this.state.currentTemporalOp,
+            temporalItem: this.state.currentTemporalItem,
+            temporalValue1: this.state.currentTemporalValue1,
+            temporalValue2: this.state.currentTemporalValue2
+        }
+        console.log(newTemporalCondition);
+        //AGGIORNARE LO STATE DELLE CONDIZIONI
+        this.setState({
+            temporalConditions: this.state.temporalConditions.concat(newTemporalCondition)
+        })
+    }
+
+    onRemoveTemporalCondition(a, b, c, d) {
+        var temporalConditionsCopy = [...this.state.temporalConditions];
+        for (let i = 0; i < temporalConditionsCopy.length; i++) {
+            if (temporalConditionsCopy[i].temporalItem === a && temporalConditionsCopy[i].temporalOperator === b && temporalConditionsCopy[i].temporalValue1 === c && temporalConditionsCopy[i].temporalValue2 === d) {
+                temporalConditionsCopy.splice(i, 1);
+                this.setState({ temporalConditions: temporalConditionsCopy });
+            }
+        }
+    }
+
+    newTemporalConditionsList() {
+        if (this.state.temporalConditions.length === 0) {
+            try {
+                document.getElementById("temporalLinkSelection").style.display = "none";
+            } catch (error) {
+                //console.log("errore con lenght pari a 0! "+error)
+            }
+        } else {
+            try {
+                document.getElementById("temporalLinkSelection").style.display = "block";
+            } catch (error) {
+                //console.log("errore con lenght diversa da 0! "+error)
+            }
+        }
+
+        return this.state.temporalConditions.map((currentTemporalCondition, index) => {
+            return (
+                <span>
+                    <div
+                        type="text"
+                        className="p-3 mb-2 bg-light"
+                        key={currentTemporalCondition.temporalItem + currentTemporalCondition.temporalOperator + currentTemporalCondition.temporalValue1 + currentTemporalCondition.temporalValue2}>
+                        {index === 0 ? ("    ") : (<b><em>{currentTemporalCondition.temporalLink + " "}</em></b>)}
+                        <em>{`"` + currentTemporalCondition.temporalItem + `" `}<b>{currentTemporalCondition.temporalOperator}</b>{` "` + currentTemporalCondition.temporalValue1 + `" ` + (currentTemporalCondition.temporalValue2 === "" ? "" : (`and "` + currentTemporalCondition.temporalValue2 + `"`))}</em>
+                        <button type="button" className="btn btn-outline-danger btn-sm ml-4" onClick={() => { this.onRemoveTemporalCondition(currentTemporalCondition.temporalItem, currentTemporalCondition.temporalOperator, currentTemporalCondition.temporalValue1, currentTemporalCondition.temporalValue2) }}>Remove</button>
                     </div>
                 </span>
             )
@@ -324,8 +493,9 @@ export default class UpdateRule extends Component {
 
     onSubmit(e) {
         e.preventDefault();
+
         if (this.state.conditions.length === 0) {
-            alert("Insert at least one value in the condition!");
+            alert("Insert at least one condition!");
             return;
         }
 
@@ -341,14 +511,26 @@ export default class UpdateRule extends Component {
             let athletesId = [...this.state.athletesId];
             for (let p = 0; p < athletesId.length; p++) {
                 let athID = athletesId[p];
-                if(athID.indexOf("~")!==-1)
+                if (athID.indexOf("~") !== -1)
                     athID = athID.substring(athID.indexOf("~") + 2);
                 athletesId[p] = athID;
             }
             this.state.athletesId = athletesId;
         } catch (error) {
-            console.log("nessuna rule settata");
+            console.log("errore onSubmit");
         }
+
+        try {
+            //TOLGO IL LINK DALLA PRIMA TEMPORAL CONDITION, PERCHÈ NON SERVE
+            let temporalConditions = [...this.state.temporalConditions];
+            let temporalCondition = temporalConditions[0];
+            temporalCondition.temporalLink = "";
+            temporalConditions[0] = temporalCondition;
+            this.setState({ temporalConditions });
+        } catch (error) {
+            console.log("errore onSubmit");
+        }
+
 
         //SE IL NOME NON È GIÀ SETTATO
         if (this.state.name === "") {
@@ -372,13 +554,12 @@ Do you want to automatically set name?`)) {
                     name: this.state.name,
                     athletesId: this.state.athletesId,
                     conditions: this.state.conditions,
+                    temporalConditions: this.state.temporalConditions,
                     message: this.state.message
                 }
 
                 axios.post('/rules/update/' + this.props.match.params.id, rule)
-                    .then(res => {
-                        alert("Rule updated!");
-                    })
+                    .then(res => alert("Rule updated!"))
             } else {//ALTRIMENTI ESCO COSÌ L'UTENTE PUÒ SETTARE IL NOME CHE VUOLE
                 return;
             }
@@ -388,6 +569,7 @@ Do you want to automatically set name?`)) {
                 name: this.state.name,
                 athletesId: this.state.athletesId,
                 conditions: this.state.conditions,
+                temporalConditions: this.state.temporalConditions,
                 message: this.state.message
             }
 
@@ -422,7 +604,7 @@ Do you want to automatically set name?`)) {
                             type="text"
                             className="mb-2 form-inline">
                             <select required
-                                className="form-control col-sm-8 col-md-6 col-lg-6 col-xl-6 mr-3"
+                                className="form-control col-8 col-sm-6 col-md-6 col-lg-6 col-xl-6 mr-4"
                                 ref={this.myRef}>
                                 <option
                                     value="noneSelected">
@@ -440,7 +622,7 @@ Do you want to automatically set name?`)) {
                                 }
                             </select>
                             <button type="button"
-                                class="btn btn-success mr-4"
+                                class="btn btn-success"
                                 onClick={() => { this.onAddAthleteId() }}>
                                 Add
                             </button>
@@ -464,7 +646,7 @@ Do you want to automatically set name?`)) {
                         <h6><label>Setted Conditions</label></h6>
                         {this.newConditionsList()}
                         <span id="linkSelection">
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-3"
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
                                 id="selectLink"
                                 title="Scegli una opzione"
                                 defaultValue="and"
@@ -474,7 +656,7 @@ Do you want to automatically set name?`)) {
                             </select>
                         </span>
                         <div className="form-inline mt-4">
-                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-3"
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
                                 id="selectCondition"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeType}>
@@ -494,7 +676,7 @@ Do you want to automatically set name?`)) {
                                 <option value="Sleep latency">Sleep latency (minutes)</option>
                                 <option value="Sleep awakening">Sleep awakenings (number)</option>
                                 <option value="Activity duration">Activity duration (minutes)</option>
-                                <option value="Activity distance">Activity distance (minutes)</option>
+                                <option value="Activity distance">Activity distance (km)</option>
                                 <option value="Burned calories">Burned calories (Kcal)</option>
                                 <option value="Steps">Steps (number)</option>
                             </select> <span className="mr-4">is</span>
@@ -521,7 +703,7 @@ Do you want to automatically set name?`)) {
                                 value={this.state.value2}
                                 onChange={this.onChangeValue2Condition}
                             ></input>
-                            {/* nel caso si parli di mood */}
+                            {/*primo valore nel caso si parli di mood */}
                             <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
                                 id="selectValMood"
                                 title="Scegli una opzione"
@@ -532,6 +714,18 @@ Do you want to automatically set name?`)) {
                                 <option value="Good">Good <Emoji symbol="🙂" label="Good" /></option>
                                 <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
                             </select>
+                            {/*secondo valore nel caso si parli di mood */}
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
+                                id="selectSecondValMood"
+                                title="Scegli una opzione"
+                                onChange={this.onChangeValue2Condition}>
+                                <option value="Really Bad">Really Bad <Emoji symbol="☹️" label="Really Bad" /></option>
+                                <option value="Bad">Bad <Emoji symbol="😕" label="Bad" /></option>
+                                <option value="Normal">Normal <Emoji symbol="😐" label="Normal" /></option>
+                                <option value="Good">Good <Emoji symbol="🙂" label="Good" /></option>
+                                <option value="Really Good">Really Good <Emoji symbol="😃" label="Really Good" /></option>
+                            </select>
+
                             <button type="button"
                                 class="btn btn-success mr-4"
                                 onClick={() => { this.onAddCondition() }}>
@@ -542,12 +736,93 @@ Do you want to automatically set name?`)) {
                         </div>
                     </div>
 
+
                     <div className="h4 text-center mt-4 p-3 rounded text-white bg-info">3 ~ Temporal conditions</div>
 
-                    <div className="my-4">
+                    <div className="form-group mb-3">
+                        <h6><label>Temporal Conditions</label></h6>
+                        {this.newTemporalConditionsList()}
+                        <span id="temporalLinkSelection">
+                            <select className="form-control col-sm-12 col-md-3 col-lg-3 col-xl-3 mr-4"
+                                id="selectTemporalLink"
+                                title="Scegli una opzione"
+                                defaultValue="and"
+                                onChange={this.onChangeTemporalLink}>
+                                <option value="and">AND</option>
+                                <option value="or">OR</option>
+                            </select>
+                        </span>
+                        <div className="form-inline mt-4">
+                            <select className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4"
+                                id="selectTemporalCondition"
+                                title="Scegli una opzione"
+                                onChange={this.onChangeTemporalItem}>
+                                <option value="select temporal item">Select temporal item...</option>
+                                {this.state.conditions.map(currentCondition => {
+                                    return (
+                                        <option value={currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}
+                                            key={currentCondition.type + currentCondition.operator + currentCondition.value1 + currentCondition.value2}>
+                                            {currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}
+                                        </option>
+                                    )
+                                })}
+                            </select>
+                            <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4"
+                                id="selectOpTemporal"
+                                onChange={this.onChangeTemporalOperator}>
+                                <option value="starts with"> starts with</option>
+                                <option value="starts before"> starts before</option>
+                                <option value="starts after"> starts after</option>
+                                <option value="starts between"> starts between</option>
+                                <option value="ends with"> ends with</option>
+                                <option value="ends before"> ends before</option>
+                                <option value="ends after"> ends after</option>
+                                <option value="ends between"> ends between</option>
+                            </select>
+                            {/* primo valore */}
+                            <select
+                                className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4"
+                                id="selectTemporalVal1"
+                                title="Choose first element"
+                                onChange={this.onChangeValue1TemporalCondition}>
+                                <option value="">Select first element...</option>
+                                {(this.state.conditions.filter(el => el.type + " is " + el.operator + " " + el.value1 + (el.value2 === "" ? "" : (" and " + el.value2)) !== this.state.currentTemporalItem)).map(currentCondition => {
+                                    return (
+                                        <option value={currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}
+                                            key={currentCondition.type + currentCondition.operator + currentCondition.value1 + currentCondition.value2}>
+                                            {currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}
+                                        </option>
+                                    )
+                                })}
+                            </select>
+                            {/* secondo valore */}
+                            <select
+                                className="form-control col-sm-12 col-md-4 col-lg-4 col-xl-4 mr-4"
+                                id="selectTemporalVal2"
+                                title="select second element"
+                                onChange={this.onChangeValue2TemporalCondition}>
+                                <option value="">Select second element...</option>
+                                {(this.state.conditions.filter(el => el.type + " is " + el.operator + " " + el.value1 + (el.value2 === "" ? "" : (" and " + el.value2)) !== this.state.currentTemporalItem && el.type + " is " + el.operator + " " + el.value1 + (el.value2 === "" ? "" : (" and " + el.value2)) !== this.state.currentTemporalValue1)).map(currentCondition => {
+                                    return (
+                                        <option value={currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}
+                                            key={currentCondition.type + currentCondition.operator + currentCondition.value1}>
+                                            {currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}
+                                        </option>
+                                    )
+                                })}
+                            </select>
+                            <button type="button"
+                                class="btn btn-success mr-4"
+                                onClick={() => { this.onAddTemporalCondition() }}>
+                                Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="my-5 text-center">
                         <input type="submit"
                             value="Update Rule"
-                            className="btn btn-primary">
+                            className="btn btn-primary btn-lg">
                         </input>
                     </div>
                 </form>

@@ -200,8 +200,6 @@ export default class AddRule extends Component {
         this.setState({
             currentOp: e.target.value
         })
-        console.log("Valore ricevuto: " + e);
-        console.log("Valore settato: " + this.state.currentOp);
     }
 
     onChangeValue1Condition(e) {
@@ -220,8 +218,6 @@ export default class AddRule extends Component {
         this.setState({
             currentLink: e.target.value
         })
-        console.log("hai cambiato valore del link ed è: " + e.target.value)
-        console.log("il valore nello state è: " + this.state.currentLink)
     }
 
     onAddCondition(e) {
@@ -241,7 +237,6 @@ export default class AddRule extends Component {
             value1: this.state.currentValue1,
             value2: this.state.currentValue2
         }
-        console.log(newCondition);
         //AGGIORNARE LO STATE DELLE CONDIZIONI
         this.setState({
             conditions: this.state.conditions.concat(newCondition)
@@ -490,7 +485,6 @@ export default class AddRule extends Component {
                 athletesId[p] = athID;
             }
             this.state.athletesId = athletesId;
-            console.log("Questa regola è destinata a queste persone: " + this.state.athletesId)
         } catch (error) {
             console.log("errore onSubmit");
         }
@@ -516,7 +510,6 @@ Do you want to automatically set name?`)) {
                 let numberRule = -1;
                 for (let x = 0; x < arrRules.length; x++) {
                     let nomeRule = arrRules[x].name;
-                    console.log(nomeRule);
                     if (nomeRule.indexOf("Automatic_Rule_Name_") > -1) {
                         let n = nomeRule.substr(20)
                         numberRule = parseInt(n) + 1;
@@ -525,7 +518,6 @@ Do you want to automatically set name?`)) {
                 if (numberRule === -1) numberRule = 0
                 let nuovoNome = "Automatic_Rule_Name_" + numberRule;
                 this.state.name = nuovoNome; //IL METODO THIS.SETSTATE PER QUALCHE MOTIVO NON FUNZIONA!!! DA RISOLVERE POSSIBILMENTE!
-                console.log("regole temporali: " + this.state.temporalConditions);
 
                 const rule = {
                     name: this.state.name,
@@ -535,18 +527,13 @@ Do you want to automatically set name?`)) {
                     message: this.state.message
                 }
 
-                console.log(rule);
-
                 axios.post('/rules/add/', rule)
-                    .then(res => console.log(res.data))
-
-                alert("Rule added!");
-                console.log("il nome è: " + this.state.name);
-
-            } else {
+                    .then(res => alert("Rule added!"))
+            } else {//ALTRIMENTI ESCO COSÌ L'UTENTE PUÒ SETTARE IL NOME CHE VUOLE
                 return;
             }
         } else {
+            //SE IL NOME È GIÀ SETTATO
             const rule = {
                 name: this.state.name,
                 athletesId: this.state.athletesId,
@@ -555,14 +542,12 @@ Do you want to automatically set name?`)) {
                 message: this.state.message
             }
 
-            console.log(rule);
-
             axios.post('/rules/add/', rule)
                 .then(res => {
-                    console.log("Rule added" + res.data)
                     alert("Rule added!");
                 })
         }
+
     }
 
     render() {
@@ -572,7 +557,6 @@ Do you want to automatically set name?`)) {
                 <form onSubmit={this.onSubmit}>
 
                     <div className="h4 text-center p-3 rounded text-white bg-info">1 ~ General settings</div>
-
                     <div className="form-group">
                         <h6><label>Rule Name</label></h6>
                         <input type="text"
