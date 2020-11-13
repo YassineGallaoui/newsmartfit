@@ -12,7 +12,9 @@ export default class AddRule extends Component {
         super(props);
 
         this.onAddAthleteId = this.onAddAthleteId.bind(this);
+        this.onAddAllAthletesId = this.onAddAllAthletesId.bind(this);
         this.onRemoveAthleteId = this.onRemoveAthleteId.bind(this);
+        this.onRemoveAllAthletesId = this.onRemoveAllAthletesId.bind(this);
         this.onAddCondition = this.onAddCondition.bind(this);
         this.onRemoveCondition = this.onRemoveCondition.bind(this);
         this.onChangeName = this.onChangeName.bind(this);
@@ -78,11 +80,11 @@ export default class AddRule extends Component {
 
     onAddAthleteId() {
         let newUserFull = this.myRef.current.value;
-        let userId = newUserFull.substring(newUserFull.indexOf("~ ") + 2);
         if (newUserFull === "noneSelected") {
             window.alert("No one is selected");
             return;
         }
+        let userId = newUserFull.substring(newUserFull.indexOf("~ ") + 2);
         this.setState({
             athletesId: this.state.athletesId.concat(newUserFull)
         })
@@ -93,6 +95,26 @@ export default class AddRule extends Component {
                 break;
             }
         }
+    }
+
+    onAddAllAthletesId() {
+        var arrAthletes = [...this.state.firstAthletesList];
+        var arrAthletesId = [...this.state.athletesId];
+        let i=0;
+        while (arrAthletes.length>0) {
+            let str = arrAthletes[0].name + " ~ " + arrAthletes[0]._id;
+            console.log(str)
+            arrAthletesId.push(str)
+            arrAthletes.splice(0, 1);
+        } 
+        console.log("fuori dal do while: ")
+        console.log("arrAthletesId: " + arrAthletesId)
+        console.log("arrAthletes: " + arrAthletes)
+        this.setState({
+            firstAthletesList: arrAthletes,
+            athletesId: arrAthletesId
+        })
+        
     }
 
     onRemoveAthleteId(e) {
@@ -110,6 +132,25 @@ export default class AddRule extends Component {
             .catch((error) => {
                 console.log(error);
             })
+    }
+
+    onRemoveAllAthletesId(){
+        console.log("funzione chiamata")
+        let athletesIDCopy = [...this.state.athletesId];
+        while(athletesIDCopy.length>0) {
+            let str = athletesIDCopy[0];
+            console.log(athletesIDCopy[0]);
+            athletesIDCopy.splice(0, 1);
+            let athId = str.substring(str.indexOf("~ ") + 2);
+            axios.get('/athletes/' + athId)
+                .then(response => {
+                    this.setState({ firstAthletesList: this.state.firstAthletesList.concat(response.data) })
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+        this.setState({ athletesId: athletesIDCopy });
     }
 
     newAthletesList() {
@@ -573,7 +614,7 @@ Do you want to automatically set name?`)) {
                             type="text"
                             className="mb-2 form-inline">
                             <select required
-                                className="form-control col-8 col-sm-6 col-md-6 col-lg-6 col-xl-6 mr-4"
+                                className="form-control col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 mr-4 mb-3 mb-sm-0"
                                 ref={this.myRef}>
                                 <option
                                     value="noneSelected">
@@ -594,6 +635,16 @@ Do you want to automatically set name?`)) {
                                 class="btn btn-success"
                                 onClick={() => { this.onAddAthleteId() }}>
                                 Add
+                            </button>
+                            <button type="button"
+                                class="btn btn-outline-success ml-4"
+                                onClick={() => { this.onAddAllAthletesId() }}>
+                                Add All
+                            </button>
+                            <button type="button"
+                                class="btn btn-outline-danger ml-4"
+                                onClick={() => { this.onRemoveAllAthletesId() }}>
+                                Remove All
                             </button>
                         </div>
                     </div>
