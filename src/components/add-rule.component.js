@@ -739,7 +739,6 @@ Do you want to automatically set name?`)) {
                                 id="selectSecondValMood"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeValue2Condition}>
-                                    
                                 <option value="Really Bad">Really Bad</option>
                                 <option value="Bad">Bad</option>
                                 <option value="Normal">Normal</option>
