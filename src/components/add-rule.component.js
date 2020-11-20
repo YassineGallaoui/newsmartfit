@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Emoji from 'a11y-react-emoji'
 let exampleText = `You should:
         - first tip
         - second tip
@@ -24,7 +23,7 @@ export default class AddRule extends Component {
         this.onChangeValue1Condition = this.onChangeValue1Condition.bind(this);
         this.onChangeValue2Condition = this.onChangeValue2Condition.bind(this);
         this.onChangelink = this.onChangelink.bind(this);
-        //this.filterAthletes = this.filterAthletes.bind(this);
+        this.filterAthletes = this.filterAthletes.bind(this);
         this.onChangeTemporalItem = this.onChangeTemporalItem.bind(this);
         this.onChangeTemporalOperator = this.onChangeTemporalOperator.bind(this);
         this.onChangeValue1TemporalCondition = this.onChangeValue1TemporalCondition.bind(this);
@@ -45,8 +44,8 @@ export default class AddRule extends Component {
             automaticAthletesId: [], //LISTA DEGLI ATLETI A CUI STO AUTOMATICAMENTE ASSEGNATO QUESTA REGOLA
             conditions: [],
             currentLink: 'and',
-            currentOp: 'equal to',
-            currentType: 'Calories Intake (All Day)',
+            currentOp: 'higher than',
+            currentType: 'Calories Intake (Breakfast)',
             currentValue1: '',
             currentValue2: '',
             temporalConditions: [],
@@ -56,7 +55,8 @@ export default class AddRule extends Component {
             currentTemporalValue1: '',
             currentTemporalValue2: '',
             message: exampleText,
-            alreadyExistingRules: [{}] //REGOLE GIÀ ESISTENTI PER POTER SETTARE IL NOME AUTOMATICO, SE SERVE
+            alreadyExistingRules: [{}], //REGOLE GIÀ ESISTENTI PER POTER SETTARE IL NOME AUTOMATICO, SE SERVE
+            askResult: []
         }
     }
 
@@ -77,6 +77,10 @@ export default class AddRule extends Component {
                 console.log(error);
             })
     }
+
+    ///////////////////////
+    /* GENERAL  SETTINGS */
+    ///////////////////////
 
     onAddAthleteId() {
         let newUserFull = this.myRef.current.value;
@@ -100,13 +104,12 @@ export default class AddRule extends Component {
     onAddAllAthletesId() {
         var arrAthletes = [...this.state.firstAthletesList];
         var arrAthletesId = [...this.state.athletesId];
-        let i=0;
-        while (arrAthletes.length>0) {
+        while (arrAthletes.length > 0) {
             let str = arrAthletes[0].name + " ~ " + arrAthletes[0]._id;
             console.log(str)
             arrAthletesId.push(str)
             arrAthletes.splice(0, 1);
-        } 
+        }
         console.log("fuori dal do while: ")
         console.log("arrAthletesId: " + arrAthletesId)
         console.log("arrAthletes: " + arrAthletes)
@@ -114,7 +117,7 @@ export default class AddRule extends Component {
             firstAthletesList: arrAthletes,
             athletesId: arrAthletesId
         })
-        
+
     }
 
     onRemoveAthleteId(e) {
@@ -134,10 +137,10 @@ export default class AddRule extends Component {
             })
     }
 
-    onRemoveAllAthletesId(){
+    onRemoveAllAthletesId() {
         console.log("funzione chiamata")
         let athletesIDCopy = [...this.state.athletesId];
-        while(athletesIDCopy.length>0) {
+        while (athletesIDCopy.length > 0) {
             let str = athletesIDCopy[0];
             console.log(athletesIDCopy[0]);
             athletesIDCopy.splice(0, 1);
@@ -178,6 +181,7 @@ export default class AddRule extends Component {
             message: e.target.value
         })
     }
+
 
     ///////////////////////
     /* NORMAL CONDITIONS */
@@ -292,62 +296,174 @@ export default class AddRule extends Component {
                 this.setState({ conditions: conditionsCopy });
             }
         }
+        this.filterAthletes();
     }
 
-    /*     componentDidUpdate(prevProps, prevState) {
-            if (prevState.conditions !== this.state.conditions) {
-                this.filterAthletes();
+    ///////////////////////
+    /* ASK TO DATABASE */
+    ///////////////////////
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.conditions !== this.state.conditions) {
+            this.filterAthletes();
+        }
+    }
+
+    filterAthletes() {
+        //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
+        let condizioni = this.state.conditions;
+        let lastPositionCondizioni = condizioni.length - 1;
+
+        if (lastPositionCondizioni === -1) {
+            this.setState({ askResult: [] });
+            return;
+        }
+
+        let tipo = condizioni[lastPositionCondizioni].type;
+        let operatore = condizioni[lastPositionCondizioni].operator;
+        let valore1 = condizioni[lastPositionCondizioni].value1;
+        let valore2 = condizioni[lastPositionCondizioni].value2;
+        let link = condizioni[lastPositionCondizioni].link;
+        let whereToSearch = "";
+        let comparison = "";
+        // WHERE TO SEARCH
+        //CASO 1
+        if (tipo === "Calories Intake (Breakfast)") whereToSearch = "mfp.CaloriesBreakfast";
+        if (tipo === "Calories Intake (Lunch)") whereToSearch = "mfp.CaloriesLunch";
+        if (tipo === "Calories Intake (Dinner)") whereToSearch = "mfp.CaloriesDinner";
+        if (tipo === "Calories Intake (Snacks)") whereToSearch = "mfp.CaloriesSnacks";
+        if (tipo === "Carbs (g)") whereToSearch = "mfp.Carbs_g";
+        if (tipo === "Fat (g)") whereToSearch = "mfp.Fat_g";
+        if (tipo === "Protein (g)") whereToSearch = "mfp.Protein_g";
+        if (tipo === "Cholesterol (mg)") whereToSearch = "mfp.Cholest_mg";
+        if (tipo === "Sodium (mg)") whereToSearch = "mfp.Sodium_mg";
+        if (tipo === "Sugars (g)") whereToSearch = "mfp.Sugars_g";
+        if (tipo === "Fibre (g)") whereToSearch = "mfp.Fiber_g";
+        //CASO 2
+        if (tipo === "Mood") whereToSearch = "mood.Mood";
+        //CASO 3
+        if (tipo === "Bed exits") whereToSearch = "sleep.NumeroDiRisvegli";
+        if (tipo === "Sleep minutes") whereToSearch = "sleep.MinutiDiSonno";
+        if (tipo === "Sleep latency") whereToSearch = "sleep.DurataDelRiposo";
+        if (tipo === "Sleep awakening") whereToSearch = "sleep.MinutiDiVeglia";
+        //CASO 4
+        if (tipo === "Burned calories") whereToSearch = "activity.CalorieBruciate";
+        if (tipo === "Activity duration") whereToSearch = "activity.MinutiDiAttivitàIntensa";
+        if (tipo === "Activity distance") whereToSearch = "activity.Distanza";
+        if (tipo === "Steps") whereToSearch = "activity.Passi";
+
+        // WHAT IS THE OPERATOR?
+        if (operatore === "equal to") comparison = "===";
+        if (operatore === "not equal to") comparison = "!==";
+        if (operatore === "higher than") comparison = ">";
+        if (operatore === "lower than") comparison = "<";
+        if (operatore === "between") comparison = "><";
+
+        // THE FIRST VALUE
+        let val1 = null;
+        if (tipo !== "Mood")
+            val1 = parseFloat(valore1)
+        else {
+            if (valore1 === "Really Good") val1 = 4
+            if (valore1 === "Good") val1 = 3
+            if (valore1 === "Normal") val1 = 2
+            if (valore1 === "Bad") val1 = 1
+            if (valore1 === "Really Bad") val1 = 0
+        }
+
+
+        // THE SECOND VALUE
+        let val2 = null;
+        if (valore2 !== "") {
+            if (tipo === "Mood") {
+                if (valore2 === "Really Good") val2 = 4
+                if (valore2 === "Good") val2 = 3
+                if (valore2 === "Normal") val2 = 2
+                if (valore2 === "Bad") val2 = 1
+                if (valore2 === "Really Bad") val2 = 0
+            } else {
+                val2 = parseFloat(valore2);
             }
-          }
-    
-        filterAthletes(){
-            console.log("sono dentro la funzione")
-            //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
-            let condizioni=this.state.conditions;
-            let atleti=this.state.permanentAthletesList;
-            for(let j=0; j<atleti.length; j++){        
-                for(let i=0; i<condizioni.length; i++){
-                    let tipo=condizioni[i].type;
-                    let operatore=condizioni[i].operator;
-                    let valore1=condizioni[i].value1;
-                    let valore2=condizioni[i].value2;
-                    let link=condizioni[i].link;
-                    console.log(tipo+" "+operatore+" "+valore1+" "+valore2+" "+link);
-                    let whereToSearch="";
-                    let comparison="";
-                    // WHERE TO SEARCH
-                        //CASO 1
-                    if(tipo==="Calories Intake (All Day)"||tipo==="Calories Intake (Breakfast)"||tipo==="Calories Intake (Lunch)"||tipo==="Calories Intake (Dinner)"||tipo==="Carbs (g)"||tipo==="Fat (g)"||tipo==="Protein (g)"||tipo==="Cholesterol (mg)"||tipo==="Sodium (mg)"||tipo==="Sugars (g)"||tipo==="Fibre (g)")
-                        whereToSearch="mfp";
-                        //CASO 2
-                    if(tipo==="Mood") whereToSearch="mood";
-                        //CASO 3
-                    if(tipo==="Bed exits"||tipo==="Sleep hours"||tipo==="Sleep latency"||tipo==="Sleep awakening") whereToSearch="sleep";
-                        //CASO 4
-                    if(tipo==="Burned calories"||tipo==="Activity duration"||tipo==="Activity distance"||tipo==="Steps") whereToSearch="activity";
-                        //VEDIAMO COSA È USCITO FUORI
-                    console.log("lo switch ha dato questo risultato: "+whereToSearch)
-                    
-                    // WHAT IS THE OPERATOR?
-                    if(tipo==="equal to")           comparison="===";
-                    if(tipo==="not equal to")       comparison="!==";
-                    if(tipo==="higher than")        comparison=">";
-                    if(tipo==="lower than")         comparison="<";
-                    if(tipo==="between")            comparison="><";
-    
-                    //THE FIRST VALUE
-                    let val1=parseFloat(valore1)
-    
-                    //THE SECOND VALUE
-                    let val2=null;
-                    if(valore2!=="") val2=parseFloat(valore2)
-                    
-                    // ===> ORA VALUTO SE LA CONDIZIONE IN QUESTIONE È VERA O MENO! <=== //
-    
-                    
+        }
+
+        // ===> ORA VALUTO SE LA CONDIZIONE IN QUESTIONE È VERA O MENO! <=== //
+
+        const condition = {
+            tipo: whereToSearch,
+            op: comparison,
+            value1: val1,
+            value2: val2
+        }
+
+        axios.post('/athletes/ask', condition)
+            .then(response => {
+                console.log(link)
+                if (this.state.conditions.length === 1) {
+                    this.setState({ askResult: response.data });
+                    return;
+                } else if (link === "and") {
+                    /* response.data = (response.data).filter(el => el === this.state.askResult) */
+                    let filtered = [];
+                    let arrAskResult = this.state.askResult;
+                    (response.data).filter(function (newData) {
+                        return arrAskResult.filter(function (oldData) {
+                            if (newData._id === oldData._id) {
+                                filtered.push(newData)
+                            }
+                        })
+                    });
+                    this.setState({ askResult: filtered });
+                    console.log(response.data)
+                } else if (link === "or") {
+                    let fusion = this.state.askResult.concat(response.data);
+                    for (let i = 0; i < fusion.length - 1; i++) {
+                        for (let n = 0; n < fusion.length - 1; n++) {
+                            if (i !== n && fusion[i]._id === fusion[n]._id) {
+                                fusion.splice(n, 1);
+                                n--;
+                            }
+                        }
+                    }
+                    this.setState({ askResult: fusion })
+                    console.log("this.state.askResult: " + this.state.askResult)
                 }
-            }
-        } */
+            })
+            .catch(err => console.log(err))
+    }
+
+    showSuggestedAthletes() {
+
+        if (this.state.conditions.length === 0) return;
+
+        if (this.state.conditions.length > 0 && this.state.askResult.length < 1) {
+            return (
+                <div className="container mt-3 py-3 bg-light text-dark rounded">
+                    <b>No Suggested Athletes</b>
+                </div>
+            )
+        }
+
+        if (this.state.askResult.length > 0) {
+            return (
+                <div className="container mt-3 py-3 bg-light text-dark rounded">
+                    <b>Suggested Athletes:</b>
+                    {this.state.askResult.map((currentResult, index) => {
+                        return (
+                            <span>
+                                <div
+                                    type="text"
+                                    className="p-2"
+                                    key={currentResult._id}>
+                                    <em>{currentResult.name + " ~ " + currentResult._id}</em>
+                                </div>
+                            </span>
+                        )
+                    })
+                    }
+                </div>
+            )
+        }
+    }
 
 
     newConditionsList() {
@@ -380,6 +496,7 @@ export default class AddRule extends Component {
             )
         })
     }
+
 
     /////////////////////////
     /* TEMPORAL CONDITIONS */
@@ -680,10 +797,10 @@ Do you want to automatically set name?`)) {
                                 id="selectCondition"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeType}>
-                                <option value="Calories Intake (All Day)">Calories Intake - All Day (Kcal)</option>
                                 <option value="Calories Intake (Breakfast)">Calories Intake - Breakfast (Kcal)</option>
                                 <option value="Calories Intake (Lunch)">Calories Intake - Lunch (Kcal)</option>
                                 <option value="Calories Intake (Dinner)">Calories Intake - Dinner (Kcal)</option>
+                                <option value="Calories Intake (Snacks)">Calories Intake - Snacks (Kcal)</option>
                                 <option value="Carbs (g)">Carbs (g)</option>
                                 <option value="Fat (g)">Fat (g)</option>
                                 <option value="Protein (g)">Protein (g)</option>
@@ -692,7 +809,7 @@ Do you want to automatically set name?`)) {
                                 <option value="Sugars (g)">Sugars (g)</option>
                                 <option value="Fibre (g)">Fibre (g)</option>
                                 <option value="Mood">Mood</option>
-                                <option value="Sleep hours">Sleep hours</option>
+                                <option value="Sleep minutes">Sleep minutes</option>
                                 <option value="Sleep latency">Sleep latency (minutes)</option>
                                 <option value="Sleep awakening">Sleep awakenings (number)</option>
                                 <option value="Activity duration">Activity duration (minutes)</option>
@@ -703,11 +820,11 @@ Do you want to automatically set name?`)) {
                             <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4 my-2"
                                 id="selectOp"
                                 onChange={this.onChangeOperator}>
-                                <option value="equal to"> = equal to</option>
-                                <option value="not equal to"> &ne; not equal to</option>
-                                <option value="between"> &gt; &lt; between</option>
                                 <option value="higher than"> &gt; higher than</option>
                                 <option value="lower than"> &lt; lower than</option>
+                                <option value="between"> &gt; &lt; between</option>
+                                <option value="equal to"> = equal to</option>
+                                <option value="not equal to"> &ne; not equal to</option>
                             </select>
                             {/* primo valore */}
                             <input type="number"
@@ -752,8 +869,7 @@ Do you want to automatically set name?`)) {
                                 Add
                             </button>
                         </div>
-                        <div className="mt-3 bg-warning text-dark rounded">
-                        </div>
+                        {this.showSuggestedAthletes()}
                     </div>
 
 

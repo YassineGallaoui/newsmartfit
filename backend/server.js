@@ -2,8 +2,6 @@ const path = require('path');
 const axios = require('axios');
 const express = require('express');
 const mongoose = require('mongoose');
-/*import ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom';*/
 require('dotenv').config();
 
 
@@ -37,27 +35,6 @@ app.use('*', function (request, response){
     response.sendFile(path.resolve(buildPath, 'index.html'))
     console.log("sono entrato dentro la funzione speciale!!")
   })
-/* app.get('/*', (req, res) => {
-    const context = {};
-    const app = ReactDOMServer.renderToString(
-      <StaticRouter location={req.url} context={context}>
-        <App />
-      </StaticRouter>
-    );
-  
-    const indexFile = path.resolve('./build/index.html');
-    fs.readFile(indexFile, 'utf8', (err, data) => {
-      if (err) {
-        console.error('Something went wrong:', err);
-        return res.status(500).send('Oops, better luck next time!');
-      }
-  
-      return res.send(
-        data.replace('<div id="root"></div>', `<div id="root">${app}</div>`)
-      );
-    });
-  }); */
-
 
   
 // METTIAMO IL SERVER IN ASCOLTO SULLA PORTA CHE ABBIAMO SCELTO

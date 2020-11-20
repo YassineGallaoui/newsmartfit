@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Emoji from 'a11y-react-emoji'
 let exampleText = `You should:
         - first tip
         - second tip
@@ -46,8 +45,8 @@ export default class UpdateRule extends Component {
             automaticAthletesId: [], //LISTA DEGLI ATLETI A CUI STO AUTOMATICAMENTE ASSEGNATO QUESTA REGOLA
             conditions: [],
             currentLink: 'and',
-            currentOp: 'equal to',
-            currentType: 'Calories Intake (All Day)',
+            currentOp: 'higher than',
+            currentType: 'Calories Intake (Breakfast)',
             currentValue1: '',
             currentValue2: '',
             temporalConditions: [],
@@ -131,7 +130,6 @@ export default class UpdateRule extends Component {
     onAddAllAthletesId() {
         var arrAthletes = [...this.state.firstAthletesList];
         var arrAthletesId = [...this.state.athletesId];
-        let i=0;
         while (arrAthletes.length>0) {
             let str = arrAthletes[0].name + " ~ " + arrAthletes[0]._id;
             console.log(str)
@@ -711,10 +709,10 @@ Do you want to automatically set name?`)) {
                                 id="selectCondition"
                                 title="Scegli una opzione"
                                 onChange={this.onChangeType}>
-                                <option value="Calories Intake (All Day)">Calories Intake - All Day (Kcal)</option>
                                 <option value="Calories Intake (Breakfast)">Calories Intake - Breakfast (Kcal)</option>
                                 <option value="Calories Intake (Lunch)">Calories Intake - Lunch (Kcal)</option>
                                 <option value="Calories Intake (Dinner)">Calories Intake - Dinner (Kcal)</option>
+                                <option value="Calories Intake (Snacks)">Calories Intake - Snacks (Kcal)</option>
                                 <option value="Carbs (g)">Carbs (g)</option>
                                 <option value="Fat (g)">Fat (g)</option>
                                 <option value="Protein (g)">Protein (g)</option>
@@ -723,7 +721,7 @@ Do you want to automatically set name?`)) {
                                 <option value="Sugars (g)">Sugars (g)</option>
                                 <option value="Fibre (g)">Fibre (g)</option>
                                 <option value="Mood">Mood</option>
-                                <option value="Sleep hours">Sleep hours</option>
+                                <option value="Sleep minutes">Sleep minutes</option>
                                 <option value="Sleep latency">Sleep latency (minutes)</option>
                                 <option value="Sleep awakening">Sleep awakenings (number)</option>
                                 <option value="Activity duration">Activity duration (minutes)</option>
@@ -734,11 +732,11 @@ Do you want to automatically set name?`)) {
                             <select className="form-control col-sm-12 col-md-2 col-lg-2 col-xl-2 mr-4 my-2"
                                 id="selectOp"
                                 onChange={this.onChangeOperator}>
-                                <option value="equal to"> = equal to</option>
-                                <option value="not equal to"> &ne; not equal to</option>
-                                <option value="between"> &gt; &lt; between</option>
                                 <option value="higher than"> &gt; higher than</option>
                                 <option value="lower than"> &lt; lower than</option>
+                                <option value="between"> &gt; &lt; between</option>
+                                <option value="equal to"> = equal to</option>
+                                <option value="not equal to"> &ne; not equal to</option>
                             </select>
                             {/* primo valore */}
                             <input type="number"
