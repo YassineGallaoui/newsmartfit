@@ -41,7 +41,7 @@ class charts extends Component {
                 legend: {
                     display: false
                 },
-                maintainAspectRatio : false
+                maintainAspectRatio: false
             }
         }
     }
@@ -280,7 +280,7 @@ class charts extends Component {
                         display: true,
                         text: titolo
                     },
-                    maintainAspectRatio : false
+                    maintainAspectRatio: false
                 }
             })
 
@@ -328,7 +328,7 @@ class charts extends Component {
                         legend: {
                             display: false
                         },
-                        maintainAspectRatio : false
+                        maintainAspectRatio: false
                     }
                 })
             }
@@ -359,7 +359,7 @@ class charts extends Component {
                         legend: {
                             display: false
                         },
-                        maintainAspectRatio : false
+                        maintainAspectRatio: false
                     }
                 })
             }
@@ -432,7 +432,7 @@ class charts extends Component {
                         legend: {
                             display: false
                         },
-                        maintainAspectRatio : false
+                        maintainAspectRatio: false
                     }
                 })
             }
@@ -475,7 +475,7 @@ class charts extends Component {
                         legend: {
                             display: false
                         },
-                        maintainAspectRatio : false
+                        maintainAspectRatio: false
                     }
                 })
             }

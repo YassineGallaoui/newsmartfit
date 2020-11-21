@@ -29,8 +29,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  min-height: 90vh;
+}
+
 /* PER RENDERE RESPONSIVE GRAFICI */
-canvas{height:100%; height: auto;}
+canvas{height:35vh !important;}
+
 
 
 /* ALL CARDS */
@@ -71,6 +76,7 @@ canvas{height:100%; height: auto;}
 }
 
 
+
 /* IN MOOD */
 .tabellaMoodDate{
   text-align:center;
@@ -85,7 +91,6 @@ canvas{height:100%; height: auto;}
 
 .tabellaMoodDate2{
   text-align:center;
-  /* font-size:22px; */
 }
 
 #selectVal2 {display: none;}
@@ -96,6 +101,9 @@ canvas{height:100%; height: auto;}
 
 #selectTemporalVal2 {display: none;}
 
+
+
 /* IN ADD AND UPDATE RULES */
 #linkSelection {display: none;}
+
 #temporalLinkSelection {display: none;}

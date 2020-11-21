@@ -33,6 +33,8 @@ export default class AddRule extends Component {
         this.onRemoveTemporalCondition = this.onRemoveTemporalCondition.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
+        this.showSuggestedAthletes = this.showSuggestedAthletes.bind(this);
+
         this.myRef = React.createRef();
         this.myRef2 = React.createRef();
 
@@ -312,130 +314,133 @@ export default class AddRule extends Component {
     filterAthletes() {
         //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
         let condizioni = this.state.conditions;
-        let lastPositionCondizioni = condizioni.length - 1;
 
-        if (lastPositionCondizioni === -1) {
+        if ( condizioni.length === 0 ) {
             this.setState({ askResult: [] });
             return;
         }
 
-        let tipo = condizioni[lastPositionCondizioni].type;
-        let operatore = condizioni[lastPositionCondizioni].operator;
-        let valore1 = condizioni[lastPositionCondizioni].value1;
-        let valore2 = condizioni[lastPositionCondizioni].value2;
-        let link = condizioni[lastPositionCondizioni].link;
-        let whereToSearch = "";
-        let comparison = "";
-        // WHERE TO SEARCH
-        //CASO 1
-        if (tipo === "Calories Intake (Breakfast)") whereToSearch = "mfp.CaloriesBreakfast";
-        if (tipo === "Calories Intake (Lunch)") whereToSearch = "mfp.CaloriesLunch";
-        if (tipo === "Calories Intake (Dinner)") whereToSearch = "mfp.CaloriesDinner";
-        if (tipo === "Calories Intake (Snacks)") whereToSearch = "mfp.CaloriesSnacks";
-        if (tipo === "Carbs (g)") whereToSearch = "mfp.Carbs_g";
-        if (tipo === "Fat (g)") whereToSearch = "mfp.Fat_g";
-        if (tipo === "Protein (g)") whereToSearch = "mfp.Protein_g";
-        if (tipo === "Cholesterol (mg)") whereToSearch = "mfp.Cholest_mg";
-        if (tipo === "Sodium (mg)") whereToSearch = "mfp.Sodium_mg";
-        if (tipo === "Sugars (g)") whereToSearch = "mfp.Sugars_g";
-        if (tipo === "Fibre (g)") whereToSearch = "mfp.Fiber_g";
-        //CASO 2
-        if (tipo === "Mood") whereToSearch = "mood.Mood";
-        //CASO 3
-        if (tipo === "Bed exits") whereToSearch = "sleep.NumeroDiRisvegli";
-        if (tipo === "Sleep minutes") whereToSearch = "sleep.MinutiDiSonno";
-        if (tipo === "Sleep latency") whereToSearch = "sleep.DurataDelRiposo";
-        if (tipo === "Sleep awakening") whereToSearch = "sleep.MinutiDiVeglia";
-        //CASO 4
-        if (tipo === "Burned calories") whereToSearch = "activity.CalorieBruciate";
-        if (tipo === "Activity duration") whereToSearch = "activity.MinutiDiAttivitàIntensa";
-        if (tipo === "Activity distance") whereToSearch = "activity.Distanza";
-        if (tipo === "Steps") whereToSearch = "activity.Passi";
+        for(let p=0; p<condizioni.length; p++) {
+            let tipo = condizioni[p].type;
+            let operatore = condizioni[p].operator;
+            let valore1 = condizioni[p].value1;
+            let valore2 = condizioni[p].value2;
+            let link = condizioni[p].link;
+            let whereToSearch = "";
+            let comparison = "";
+            // WHERE TO SEARCH
+            //CASO 1
+            if (tipo === "Calories Intake (Breakfast)") whereToSearch = "mfp.CaloriesBreakfast";
+            if (tipo === "Calories Intake (Lunch)") whereToSearch = "mfp.CaloriesLunch";
+            if (tipo === "Calories Intake (Dinner)") whereToSearch = "mfp.CaloriesDinner";
+            if (tipo === "Calories Intake (Snacks)") whereToSearch = "mfp.CaloriesSnacks";
+            if (tipo === "Carbs (g)") whereToSearch = "mfp.Carbs_g";
+            if (tipo === "Fat (g)") whereToSearch = "mfp.Fat_g";
+            if (tipo === "Protein (g)") whereToSearch = "mfp.Protein_g";
+            if (tipo === "Cholesterol (mg)") whereToSearch = "mfp.Cholest_mg";
+            if (tipo === "Sodium (mg)") whereToSearch = "mfp.Sodium_mg";
+            if (tipo === "Sugars (g)") whereToSearch = "mfp.Sugars_g";
+            if (tipo === "Fibre (g)") whereToSearch = "mfp.Fiber_g";
+            //CASO 2
+            if (tipo === "Mood") whereToSearch = "mood.Mood";
+            //CASO 3
+            if (tipo === "Bed exits") whereToSearch = "sleep.NumeroDiRisvegli";
+            if (tipo === "Sleep minutes") whereToSearch = "sleep.MinutiDiSonno";
+            if (tipo === "Sleep latency") whereToSearch = "sleep.DurataDelRiposo";
+            if (tipo === "Sleep awakening") whereToSearch = "sleep.MinutiDiVeglia";
+            //CASO 4
+            if (tipo === "Burned calories") whereToSearch = "activity.CalorieBruciate";
+            if (tipo === "Activity duration") whereToSearch = "activity.MinutiDiAttivitàIntensa";
+            if (tipo === "Activity distance") whereToSearch = "activity.Distanza";
+            if (tipo === "Steps") whereToSearch = "activity.Passi";
 
-        // WHAT IS THE OPERATOR?
-        if (operatore === "equal to") comparison = "===";
-        if (operatore === "not equal to") comparison = "!==";
-        if (operatore === "higher than") comparison = ">";
-        if (operatore === "lower than") comparison = "<";
-        if (operatore === "between") comparison = "><";
+            // WHAT IS THE OPERATOR?
+            if (operatore === "equal to") comparison = "===";
+            if (operatore === "not equal to") comparison = "!==";
+            if (operatore === "higher than") comparison = ">";
+            if (operatore === "lower than") comparison = "<";
+            if (operatore === "between") comparison = "><";
 
-        // THE FIRST VALUE
-        let val1 = null;
-        if (tipo !== "Mood")
-            val1 = parseFloat(valore1)
-        else {
-            if (valore1 === "Really Good") val1 = 4
-            if (valore1 === "Good") val1 = 3
-            if (valore1 === "Normal") val1 = 2
-            if (valore1 === "Bad") val1 = 1
-            if (valore1 === "Really Bad") val1 = 0
-        }
-
-
-        // THE SECOND VALUE
-        let val2 = null;
-        if (valore2 !== "") {
-            if (tipo === "Mood") {
-                if (valore2 === "Really Good") val2 = 4
-                if (valore2 === "Good") val2 = 3
-                if (valore2 === "Normal") val2 = 2
-                if (valore2 === "Bad") val2 = 1
-                if (valore2 === "Really Bad") val2 = 0
-            } else {
-                val2 = parseFloat(valore2);
+            // THE FIRST VALUE
+            let val1 = null;
+            if (tipo !== "Mood")
+                val1 = parseFloat(valore1)
+            else {
+                if (valore1 === "Really Good") val1 = 4
+                if (valore1 === "Good") val1 = 3
+                if (valore1 === "Normal") val1 = 2
+                if (valore1 === "Bad") val1 = 1
+                if (valore1 === "Really Bad") val1 = 0
             }
-        }
 
-        // ===> ORA VALUTO SE LA CONDIZIONE IN QUESTIONE È VERA O MENO! <=== //
 
-        const condition = {
-            tipo: whereToSearch,
-            op: comparison,
-            value1: val1,
-            value2: val2
-        }
+            // THE SECOND VALUE
+            let val2 = null;
+            if (valore2 !== "") {
+                if (tipo === "Mood") {
+                    if (valore2 === "Really Good") val2 = 4
+                    if (valore2 === "Good") val2 = 3
+                    if (valore2 === "Normal") val2 = 2
+                    if (valore2 === "Bad") val2 = 1
+                    if (valore2 === "Really Bad") val2 = 0
+                } else {
+                    val2 = parseFloat(valore2);
+                }
+            }
 
-        axios.post('/athletes/ask', condition)
-            .then(response => {
-                console.log(link)
-                if (this.state.conditions.length === 1) {
-                    this.setState({ askResult: response.data });
-                    return;
-                } else if (link === "and") {
-                    /* response.data = (response.data).filter(el => el === this.state.askResult) */
-                    let filtered = [];
-                    let arrAskResult = this.state.askResult;
-                    (response.data).filter(function (newData) {
-                        return arrAskResult.filter(function (oldData) {
-                            if (newData._id === oldData._id) {
-                                filtered.push(newData)
-                            }
-                        })
-                    });
-                    this.setState({ askResult: filtered });
-                    console.log(response.data)
-                } else if (link === "or") {
-                    let fusion = this.state.askResult.concat(response.data);
-                    for (let i = 0; i < fusion.length - 1; i++) {
-                        for (let n = 0; n < fusion.length - 1; n++) {
-                            if (i !== n && fusion[i]._id === fusion[n]._id) {
-                                fusion.splice(n, 1);
-                                n--;
+            // ===> ORA VALUTO SE LA CONDIZIONE IN QUESTIONE È VERA O MENO! <=== //
+
+            const condition = {
+                tipo: whereToSearch,
+                op: comparison,
+                value1: val1,
+                value2: val2
+            }
+
+            axios.post('/athletes/ask', condition)
+                .then(response => {
+                    console.log(link)
+                    if (this.state.conditions.length === 1) {
+                        this.setState({ askResult: response.data });
+                        return;
+                    } else if (link === "and") {
+                        /* response.data = (response.data).filter(el => el === this.state.askResult) */
+                        let filtered = [];
+                        let arrAskResult = this.state.askResult;
+                        (response.data).filter(function (newData) {
+                            return arrAskResult.filter(function (oldData) {
+                                if (newData._id === oldData._id) {
+                                    filtered.push(newData)
+                                }
+                            })
+                        });
+                        this.setState({ askResult: filtered });
+                        console.log(response.data)
+                    } else if (link === "or") {
+                        let fusion = this.state.askResult.concat(response.data);
+                        for (let i = 0; i < fusion.length; i++) {
+                            for (let n = 0; n < fusion.length; n++) {
+                                if (i !== n && fusion[i]._id === fusion[n]._id) {
+                                    fusion.splice(n, 1);
+                                    n--;
+                                }
                             }
                         }
+                        console.log("fusion:")
+                        console.log(fusion)
+                        this.setState({ askResult: fusion })
+                        console.log("this.state.askResult: " + this.state.askResult)
                     }
-                    this.setState({ askResult: fusion })
-                    console.log("this.state.askResult: " + this.state.askResult)
-                }
-            })
-            .catch(err => console.log(err))
+                })
+                .catch(err => console.log(err))
+        }
     }
 
     showSuggestedAthletes() {
 
         if (this.state.conditions.length === 0) return;
 
-        if (this.state.conditions.length > 0 && this.state.askResult.length < 1) {
+        if (this.state.conditions.length > 0 && this.state.askResult.length === 0) {
             return (
                 <div className="container mt-3 py-3 bg-light text-dark rounded">
                     <b>No Suggested Athletes</b>
