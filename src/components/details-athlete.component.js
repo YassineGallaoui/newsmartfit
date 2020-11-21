@@ -325,8 +325,8 @@ export default class DetailsAthlete extends Component {
                                         <span className="text-muted"><em>AthleteID: {this.state.id}</em></span><br />
                                         <span>Name: {this.state.name}</span><br />
                                         <span>Birthday: {this.state.dob}</span><br />
-                                        <span>Weight: {this.state.weight}</span><br />
-                                        <span>Height: {this.state.height}</span><br />
+                                        <span>Weight: {this.state.weight} cm</span><br />
+                                        <span>Height: {this.state.height} kg</span><br />
                                     </p>
                                 </div>
                             </div>
