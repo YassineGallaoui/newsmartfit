@@ -11,7 +11,9 @@ export default class AddRule extends Component {
         super(props);
 
         this.onAddAthleteId = this.onAddAthleteId.bind(this);
+        this.onAddSuggestedAthleteId = this.onAddSuggestedAthleteId.bind(this);
         this.onAddAllAthletesId = this.onAddAllAthletesId.bind(this);
+        this.onAddAllSuggestedAthletesId = this.onAddAllSuggestedAthletesId.bind(this);
         this.onRemoveAthleteId = this.onRemoveAthleteId.bind(this);
         this.onRemoveAllAthletesId = this.onRemoveAllAthletesId.bind(this);
         this.onAddCondition = this.onAddCondition.bind(this);
@@ -103,6 +105,22 @@ export default class AddRule extends Component {
         }
     }
 
+    onAddSuggestedAthleteId(e) {
+        let newUserFull = e;
+        let userId = newUserFull.substring(newUserFull.indexOf("~ ") + 2);
+        this.setState({
+            athletesId: this.state.athletesId.concat(newUserFull)
+        })
+        //tolgo il nome dell'atleta aggiunto dalla lista degli atleti che si possono aggiungere
+        let arr1 = this.state.firstAthletesList;
+        for (let j = 0; j < arr1.length; j++) {
+            if (arr1[j]._id === userId) {
+                arr1.splice(j, 1)
+                break;
+            }
+        }
+    }
+
     onAddAllAthletesId() {
         var arrAthletes = [...this.state.firstAthletesList];
         var arrAthletesId = [...this.state.athletesId];
@@ -112,14 +130,36 @@ export default class AddRule extends Component {
             arrAthletesId.push(str)
             arrAthletes.splice(0, 1);
         }
-        console.log("fuori dal do while: ")
-        console.log("arrAthletesId: " + arrAthletesId)
-        console.log("arrAthletes: " + arrAthletes)
         this.setState({
             firstAthletesList: arrAthletes,
             athletesId: arrAthletesId
         })
+    }
 
+    onAddAllSuggestedAthletesId() {
+        var arrAthletesFromSelect = [...this.state.firstAthletesList];
+        var arrAthletesAskResult = [...this.state.askResult];
+        var arrAthletesId = [...this.state.athletesId];
+        while (arrAthletesAskResult.length > 0) {
+            let str = arrAthletesAskResult[0].name + " ~ " + arrAthletesAskResult[0]._id;
+            console.log(str)
+            let trovato = false;
+            for (let x = 0; x < arrAthletesId.length; x++) {
+                if (arrAthletesId[x] === str)
+                    trovato = true
+            }
+            if (trovato === false)
+                arrAthletesId.push(str)
+            arrAthletesAskResult.splice(0, 1);
+            for (let x = 0; x < arrAthletesFromSelect.length; x++) {
+                if (arrAthletesFromSelect[x].name + " ~ " + arrAthletesFromSelect[x]._id === str)
+                    arrAthletesFromSelect.splice(x, 1)
+            }
+        }
+        this.setState({
+            firstAthletesList: arrAthletesFromSelect,
+            athletesId: arrAthletesId
+        })
     }
 
     onRemoveAthleteId(e) {
@@ -188,6 +228,7 @@ export default class AddRule extends Component {
     ///////////////////////
     /* NORMAL CONDITIONS */
     ///////////////////////
+
     onChangeType(e) {
         if (e.target.value === "Mood") {
             document.getElementById("selectVal1").style.display = "none";
@@ -315,12 +356,12 @@ export default class AddRule extends Component {
         //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
         let condizioni = this.state.conditions;
 
-        if ( condizioni.length === 0 ) {
+        if (condizioni.length === 0) {
             this.setState({ askResult: [] });
             return;
         }
 
-        for(let p=0; p<condizioni.length; p++) {
+        for (let p = 0; p < condizioni.length; p++) {
             let tipo = condizioni[p].type;
             let operatore = condizioni[p].operator;
             let valore1 = condizioni[p].value1;
@@ -415,7 +456,6 @@ export default class AddRule extends Component {
                             })
                         });
                         this.setState({ askResult: filtered });
-                        console.log(response.data)
                     } else if (link === "or") {
                         let fusion = this.state.askResult.concat(response.data);
                         for (let i = 0; i < fusion.length; i++) {
@@ -436,13 +476,28 @@ export default class AddRule extends Component {
         }
     }
 
+    putButtonOrNot(nameAndId) {
+        console.log("ho chiamato la funzione")
+        let arr1 = this.state.firstAthletesList;
+        for (let x = 0; x < arr1.length; x++) {
+            if (arr1[x].name + " ~ " + arr1[x]._id === nameAndId) {
+                return (
+                    <input type="button"
+                        className="btn btn-outline-success ml-4"
+                        value="Add"
+                        onClick={() => { this.onAddSuggestedAthleteId(nameAndId) }} />
+                )
+            }
+        } return;
+    }
+
     showSuggestedAthletes() {
 
         if (this.state.conditions.length === 0) return;
 
         if (this.state.conditions.length > 0 && this.state.askResult.length === 0) {
             return (
-                <div className="container mt-3 py-3 bg-light text-dark rounded">
+                <div className="container mt-3 py-3 text-dark rounded">
                     <b>No Suggested Athletes</b>
                 </div>
             )
@@ -450,18 +505,22 @@ export default class AddRule extends Component {
 
         if (this.state.askResult.length > 0) {
             return (
-                <div className="container mt-3 py-3 bg-light text-dark rounded">
-                    <b>Suggested Athletes:</b>
+                <div>
+                    <div className="container mt-3 py-3 text-dark rounded">
+                        <b>Suggested Athletes:</b>
+                        <button type="button"
+                            className="btn btn-outline-success mt-3 mr-3 float-right"
+                            onClick={() => { this.onAddAllSuggestedAthletesId() }}>
+                            Add All
+                        </button>
+                    </div>
+                    
                     {this.state.askResult.map((currentResult, index) => {
                         return (
-                            <span>
-                                <div
-                                    type="text"
-                                    className="p-2"
-                                    key={currentResult._id}>
-                                    <em>{currentResult.name + " ~ " + currentResult._id}</em>
-                                </div>
-                            </span>
+                            <div className=" bg-light p-3 mb-2" key={currentResult._id}>
+                                <em>{currentResult.name + " ~ " + currentResult._id}</em>
+                                {this.putButtonOrNot(currentResult.name + " ~ " + currentResult._id)}
+                            </div>
                         )
                     })
                     }
@@ -469,7 +528,6 @@ export default class AddRule extends Component {
             )
         }
     }
-
 
     newConditionsList() {
         if (this.state.conditions.length === 0) {
@@ -506,6 +564,7 @@ export default class AddRule extends Component {
     /////////////////////////
     /* TEMPORAL CONDITIONS */
     /////////////////////////
+
     onChangeTemporalItem(e) {
         if (e.target.value === this.state.currentTemporalValue1) {
             this.setState({
@@ -713,28 +772,29 @@ Do you want to automatically set name?`)) {
 
     }
 
+
+    //////////////////////////////
+    /*----------RENDER----------*/
+    //////////////////////////////
+
     render() {
         return (
             <div>
                 <h3 className="mb-4">Create new rule</h3>
                 <form onSubmit={this.onSubmit}>
 
-                    <div className="h4 text-center p-3 rounded text-white bg-info">1 ~ General settings</div>
+                    <div className="h4 text-center mb-3 p-3 rounded text-white bg-info">1 ~ General settings</div>
                     <div className="form-group">
                         <h6><label>Rule Name</label></h6>
                         <input type="text"
-                            className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control"
+                            className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control mb-3"
                             value={this.state.name}
-                            onChange={this.onChangeName}
-                        ></input>
-                    </div>
+                            onChange={this.onChangeName}/>
 
-                    <div className="form-group">
                         <h6><label>Express Athletes ID</label></h6>
                         {this.newAthletesList()}
-                        <div
-                            type="text"
-                            className="mb-2 form-inline">
+                        <div type="text"
+                            className="mb-2 form-inline mb-3">
                             <select required
                                 className="form-control col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 mr-4 mb-3 mb-sm-0"
                                 ref={this.myRef}>
@@ -754,26 +814,24 @@ Do you want to automatically set name?`)) {
                                 }
                             </select>
                             <button type="button"
-                                class="btn btn-success"
+                                className="btn btn-success"
                                 onClick={() => { this.onAddAthleteId() }}>
                                 Add
                             </button>
                             <button type="button"
-                                class="btn btn-outline-success ml-4"
+                                className="btn btn-outline-success ml-4"
                                 onClick={() => { this.onAddAllAthletesId() }}>
                                 Add All
                             </button>
                             <button type="button"
-                                class="btn btn-outline-danger ml-4"
+                                className="btn btn-outline-danger ml-4"
                                 onClick={() => { this.onRemoveAllAthletesId() }}>
                                 Remove All
                             </button>
                         </div>
-                    </div>
 
-                    <div className="form-group">
                         <h6><label>Message</label></h6>
-                        <textarea className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control"
+                        <textarea className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control mb-3"
                             id="formControlTextarea1"
                             required
                             rows="4"
@@ -782,7 +840,7 @@ Do you want to automatically set name?`)) {
                     </div>
 
 
-                    <div className="h4 text-center mt-5 p-3 rounded text-white bg-info">2 ~ Conditions</div>
+                    <div className="h4 text-center mt-5 mb-3 p-3 rounded text-white bg-info">2 ~ Conditions</div>
 
                     <div className="form-group">
                         <h6><label>Setted Conditions</label></h6>
@@ -869,7 +927,7 @@ Do you want to automatically set name?`)) {
                             </select>
 
                             <button type="button"
-                                class="btn btn-success mr-4 my-2"
+                                className="btn btn-success mr-4 my-2"
                                 onClick={() => { this.onAddCondition() }}>
                                 Add
                             </button>
@@ -878,7 +936,7 @@ Do you want to automatically set name?`)) {
                     </div>
 
 
-                    <div className="h4 text-center mt-5 p-3 rounded text-white bg-info">3 ~ Temporal conditions</div>
+                    <div className="h4 text-center mt-5 mb-3 p-3 rounded text-white bg-info">3 ~ Temporal conditions</div>
 
                     <div className="form-group mb-3">
                         <h6><label>Temporal Conditions</label></h6>
@@ -953,7 +1011,7 @@ Do you want to automatically set name?`)) {
                                 })}
                             </select>
                             <button type="button"
-                                class="btn btn-success mr-4 my-2"
+                                className="btn btn-success mr-4 my-2"
                                 onClick={() => { this.onAddTemporalCondition() }}>
                                 Add
                             </button>
