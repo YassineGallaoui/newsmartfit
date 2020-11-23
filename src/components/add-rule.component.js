@@ -34,7 +34,6 @@ export default class AddRule extends Component {
         this.onAddTemporalCondition = this.onAddTemporalCondition.bind(this);
         this.onRemoveTemporalCondition = this.onRemoveTemporalCondition.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-
         this.showSuggestedAthletes = this.showSuggestedAthletes.bind(this);
 
         this.myRef = React.createRef();
@@ -60,7 +59,8 @@ export default class AddRule extends Component {
             currentTemporalValue2: '',
             message: exampleText,
             alreadyExistingRules: [{}], //REGOLE GIÀ ESISTENTI PER POTER SETTARE IL NOME AUTOMATICO, SE SERVE
-            askResult: []
+            askResult: [],
+            suggestedAthletesId: []
         }
     }
 
@@ -440,7 +440,6 @@ export default class AddRule extends Component {
 
             axios.post('/athletes/ask', condition)
                 .then(response => {
-                    console.log(link)
                     if (this.state.conditions.length === 1) {
                         this.setState({ askResult: response.data });
                         return;
@@ -509,7 +508,7 @@ export default class AddRule extends Component {
                     <div className="container mt-3 py-3 text-dark rounded">
                         <b>Suggested Athletes:</b>
                         <button type="button"
-                            className="btn btn-outline-success mt-3 mr-3 float-right"
+                            className="btn btn-outline-success mt-n2 mr-3 float-right"
                             onClick={() => { this.onAddAllSuggestedAthletesId() }}>
                             Add All
                         </button>
@@ -685,6 +684,8 @@ export default class AddRule extends Component {
     onSubmit(e) {
         e.preventDefault();
 
+        let suggestedAthletesId = [];
+
         if (this.state.conditions.length === 0) {
             alert("Insert at least one condition!");
             return;
@@ -707,6 +708,14 @@ export default class AddRule extends Component {
                 athletesId[p] = athID;
             }
             this.state.athletesId = athletesId;
+
+            
+            for(let x=0; x<this.state.askResult.length; x++) {
+                let str = this.state.askResult[x].name + " ~ " + this.state.askResult[x]._id;
+                suggestedAthletesId.push(str);
+            }
+            this.state.suggestedAthletesId = suggestedAthletesId;
+
         } catch (error) {
             console.log("errore onSubmit");
         }
@@ -744,6 +753,7 @@ Do you want to automatically set name?`)) {
                 const rule = {
                     name: this.state.name,
                     athletesId: this.state.athletesId,
+                    suggestedAthletesId: this.state.suggestedAthletesId,
                     conditions: this.state.conditions,
                     temporalConditions: this.state.temporalConditions,
                     message: this.state.message
@@ -759,6 +769,7 @@ Do you want to automatically set name?`)) {
             const rule = {
                 name: this.state.name,
                 athletesId: this.state.athletesId,
+                suggestedAthletesId: this.state.suggestedAthletesId,
                 conditions: this.state.conditions,
                 temporalConditions: this.state.temporalConditions,
                 message: this.state.message
@@ -1018,12 +1029,14 @@ Do you want to automatically set name?`)) {
                         </div>
                     </div>
 
+
                     <div className="my-4 text-center">
                         <input type="submit"
                             value="Create Rule"
                             className="btn btn-primary btn-lg">
                         </input>
                     </div>
+
                 </form>
             </div>
         )

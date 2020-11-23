@@ -22,6 +22,7 @@ const ruleSchema = new Schema({
 	name: String,
 	message: String,
 	athletesId: [String],
+	suggestedAthletesId: [String],
 	conditions: [conditionsSchema],
 	temporalConditions: [temporalConditionsSchema]
 })

@@ -19,6 +19,7 @@ router.route('/:id').get((req,res) => {
 // AGGIUNTA DI UNA SINGOLA REGOLA
 router.route('/add').post((req,res) => {
     const athletesId = req.body.athletesId;
+    const suggestedAthletesId = req.body.suggestedAthletesId;
     const name = req.body.name;
     const message = req.body.message;
     const conditions = req.body.conditions;
@@ -26,6 +27,7 @@ router.route('/add').post((req,res) => {
     const newRule = new Rules({
         name,
         athletesId,
+        suggestedAthletesId,
         conditions,
         temporalConditions,
         message
@@ -41,6 +43,7 @@ router.route('/update/:id').post((req,res) => {
     Rules.findById(req.params.id)
     .then(rules => {
         rules.athletesId = req.body.athletesId;
+        rules.suggestedAthletesId = req.body.suggestedAthletesId;
         rules.name = req.body.name;
         rules.message = req.body.message;
         rules.conditions = req.body.conditions;
@@ -60,14 +63,4 @@ router.route('/:id').delete((req,res) => {
     .catch(err => res.status(400).json('Error: '+err));
 })
 
-module.exports = router; 
-
-
-// COSE IN PIÙ 
-// AGGIUNTA DI ATLETI
-// ---> DA VERIFICARE SE QUESTA FUNZIONALITÀ È NECESSARIA
-
-// ---> DA VERIFICARE SE QUESTA FUNZIONALITÀ È NECESSARI
-
-// QUANDO SI VOGLIONO MODIFICARE LE INFORMAZIONI DI UN SINGOLO ATLETA
-// ---> DA VERIFICARE SE QUESTA FUNZIONALITÀ È NECESSARIA
+module.exports = router;

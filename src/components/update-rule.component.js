@@ -12,7 +12,9 @@ export default class UpdateRule extends Component {
 
         this.controllaNomi = this.controllaNomi.bind(this);
         this.onAddAthleteId = this.onAddAthleteId.bind(this);
+        this.onAddSuggestedAthleteId = this.onAddSuggestedAthleteId.bind(this);
         this.onAddAllAthletesId = this.onAddAllAthletesId.bind(this);
+        this.onAddAllSuggestedAthletesId = this.onAddAllSuggestedAthletesId.bind(this);
         this.onRemoveAthleteId = this.onRemoveAthleteId.bind(this);
         this.onRemoveAllAthletesId = this.onRemoveAllAthletesId.bind(this);
         this.onAddCondition = this.onAddCondition.bind(this);
@@ -24,7 +26,7 @@ export default class UpdateRule extends Component {
         this.onChangeValue1Condition = this.onChangeValue1Condition.bind(this);
         this.onChangeValue2Condition = this.onChangeValue2Condition.bind(this);
         this.onChangelink = this.onChangelink.bind(this);
-        //this.filterAthletes = this.filterAthletes.bind(this);
+        this.filterAthletes = this.filterAthletes.bind(this);
         this.onChangeTemporalItem = this.onChangeTemporalItem.bind(this);
         this.onChangeTemporalOperator = this.onChangeTemporalOperator.bind(this);
         this.onChangeValue1TemporalCondition = this.onChangeValue1TemporalCondition.bind(this);
@@ -33,6 +35,7 @@ export default class UpdateRule extends Component {
         this.onAddTemporalCondition = this.onAddTemporalCondition.bind(this);
         this.onRemoveTemporalCondition = this.onRemoveTemporalCondition.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.showSuggestedAthletes = this.showSuggestedAthletes.bind(this);
 
         this.myRef = React.createRef();
         this.myRef2 = React.createRef();
@@ -56,7 +59,9 @@ export default class UpdateRule extends Component {
             currentTemporalValue1: '',
             currentTemporalValue2: '',
             message: exampleText,
-            alreadyExistingRules: [{}] //REGOLE GIÀ ESISTENTI PER POTER SETTARE IL NOME AUTOMATICO, SE SERVE
+            alreadyExistingRules: [{}], //REGOLE GIÀ ESISTENTI PER POTER SETTARE IL NOME AUTOMATICO, SE SERVE
+            askResult: [],
+            suggestedAthletesId: []
         }
     }
 
@@ -65,6 +70,7 @@ export default class UpdateRule extends Component {
             .then(response => {
                 this.setState({
                     athletesId: response.data.athletesId,
+                    suggestedAthletesId: response.data.suggestedAthletesId,
                     name: response.data.name,
                     message: response.data.message,
                     conditions: response.data.conditions,
@@ -108,6 +114,10 @@ export default class UpdateRule extends Component {
         }
     }
 
+    ///////////////////////
+    /* GENERAL  SETTINGS */
+    ///////////////////////
+
     onAddAthleteId() {
         let newUserFull = this.myRef.current.value;
         if (newUserFull === "noneSelected") {
@@ -127,23 +137,61 @@ export default class UpdateRule extends Component {
         }
     }
 
+    onAddSuggestedAthleteId(e) {
+        let newUserFull = e;
+        let userId = newUserFull.substring(newUserFull.indexOf("~ ") + 2);
+        this.setState({
+            athletesId: this.state.athletesId.concat(newUserFull)
+        })
+        //tolgo il nome dell'atleta aggiunto dalla lista degli atleti che si possono aggiungere
+        let arr1 = this.state.firstAthletesList;
+        for (let j = 0; j < arr1.length; j++) {
+            if (arr1[j]._id === userId) {
+                arr1.splice(j, 1)
+                break;
+            }
+        }
+    }
+
     onAddAllAthletesId() {
         var arrAthletes = [...this.state.firstAthletesList];
         var arrAthletesId = [...this.state.athletesId];
-        while (arrAthletes.length>0) {
+        while (arrAthletes.length > 0) {
             let str = arrAthletes[0].name + " ~ " + arrAthletes[0]._id;
             console.log(str)
             arrAthletesId.push(str)
             arrAthletes.splice(0, 1);
-        } 
-        console.log("fuori dal do while: ")
-        console.log("arrAthletesId: " + arrAthletesId)
-        console.log("arrAthletes: " + arrAthletes)
+        }
         this.setState({
             firstAthletesList: arrAthletes,
             athletesId: arrAthletesId
         })
-        
+    }
+
+    onAddAllSuggestedAthletesId() {
+        var arrAthletesFromSelect = [...this.state.firstAthletesList];
+        var arrAthletesAskResult = [...this.state.askResult];
+        var arrAthletesId = [...this.state.athletesId];
+        while (arrAthletesAskResult.length > 0) {
+            let str = arrAthletesAskResult[0];
+            console.log(str)
+            let trovato = false;
+            for (let x = 0; x < arrAthletesId.length; x++) {
+                if (arrAthletesId[x] === str)
+                    trovato = true
+            }
+            if (trovato === false)
+                arrAthletesId.push(str)
+            arrAthletesAskResult.splice(0, 1);
+            for (let x = 0; x < arrAthletesFromSelect.length; x++) {
+                if (arrAthletesFromSelect[x].name + " ~ " + arrAthletesFromSelect[x]._id === str)
+                    arrAthletesFromSelect.splice(x, 1)
+            }
+        }
+        this.setState({
+            firstAthletesList: arrAthletesFromSelect,
+            athletesId: arrAthletesId
+        })
     }
 
     onRemoveAthleteId(e) {
@@ -163,10 +211,10 @@ export default class UpdateRule extends Component {
             })
     }
 
-    onRemoveAllAthletesId(){
+    onRemoveAllAthletesId() {
         console.log("funzione chiamata")
         let athletesIDCopy = [...this.state.athletesId];
-        while(athletesIDCopy.length>0) {
+        while (athletesIDCopy.length > 0) {
             let str = athletesIDCopy[0];
             console.log(athletesIDCopy[0]);
             athletesIDCopy.splice(0, 1);
@@ -208,9 +256,11 @@ export default class UpdateRule extends Component {
         })
     }
 
+
     ///////////////////////
     /* NORMAL CONDITIONS */
     ///////////////////////
+
     onChangeType(e) {
         if (e.target.value === "Mood") {
             document.getElementById("selectVal1").style.display = "none";
@@ -321,63 +371,194 @@ export default class UpdateRule extends Component {
                 this.setState({ conditions: conditionsCopy });
             }
         }
+        this.filterAthletes();
     }
 
-    /*     componentDidUpdate(prevProps, prevState) {
-            if (prevState.conditions !== this.state.conditions) {
-                this.filterAthletes();
+    ///////////////////////
+    //* ASK TO DATABASE *//
+    ///////////////////////
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.conditions !== this.state.conditions) {
+            this.filterAthletes();
+        }
+    }
+
+    filterAthletes() {
+        //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
+        let condizioni = this.state.conditions;
+
+        if (condizioni.length === 0) {
+            this.setState({ askResult: [] });
+            return;
+        }
+
+        for (let p = 0; p < condizioni.length; p++) {
+            let tipo = condizioni[p].type;
+            let operatore = condizioni[p].operator;
+            let valore1 = condizioni[p].value1;
+            let valore2 = condizioni[p].value2;
+            let link = condizioni[p].link;
+            let whereToSearch = "";
+            let comparison = "";
+            // WHERE TO SEARCH
+            //CASO 1
+            if (tipo === "Calories Intake (Breakfast)") whereToSearch = "mfp.CaloriesBreakfast";
+            if (tipo === "Calories Intake (Lunch)") whereToSearch = "mfp.CaloriesLunch";
+            if (tipo === "Calories Intake (Dinner)") whereToSearch = "mfp.CaloriesDinner";
+            if (tipo === "Calories Intake (Snacks)") whereToSearch = "mfp.CaloriesSnacks";
+            if (tipo === "Carbs (g)") whereToSearch = "mfp.Carbs_g";
+            if (tipo === "Fat (g)") whereToSearch = "mfp.Fat_g";
+            if (tipo === "Protein (g)") whereToSearch = "mfp.Protein_g";
+            if (tipo === "Cholesterol (mg)") whereToSearch = "mfp.Cholest_mg";
+            if (tipo === "Sodium (mg)") whereToSearch = "mfp.Sodium_mg";
+            if (tipo === "Sugars (g)") whereToSearch = "mfp.Sugars_g";
+            if (tipo === "Fibre (g)") whereToSearch = "mfp.Fiber_g";
+            //CASO 2
+            if (tipo === "Mood") whereToSearch = "mood.Mood";
+            //CASO 3
+            if (tipo === "Bed exits") whereToSearch = "sleep.NumeroDiRisvegli";
+            if (tipo === "Sleep minutes") whereToSearch = "sleep.MinutiDiSonno";
+            if (tipo === "Sleep latency") whereToSearch = "sleep.DurataDelRiposo";
+            if (tipo === "Sleep awakening") whereToSearch = "sleep.MinutiDiVeglia";
+            //CASO 4
+            if (tipo === "Burned calories") whereToSearch = "activity.CalorieBruciate";
+            if (tipo === "Activity duration") whereToSearch = "activity.MinutiDiAttivitàIntensa";
+            if (tipo === "Activity distance") whereToSearch = "activity.Distanza";
+            if (tipo === "Steps") whereToSearch = "activity.Passi";
+
+            // WHAT IS THE OPERATOR?
+            if (operatore === "equal to") comparison = "===";
+            if (operatore === "not equal to") comparison = "!==";
+            if (operatore === "higher than") comparison = ">";
+            if (operatore === "lower than") comparison = "<";
+            if (operatore === "between") comparison = "><";
+
+            // THE FIRST VALUE
+            let val1 = null;
+            if (tipo !== "Mood")
+                val1 = parseFloat(valore1)
+            else {
+                if (valore1 === "Really Good") val1 = 4
+                if (valore1 === "Good") val1 = 3
+                if (valore1 === "Normal") val1 = 2
+                if (valore1 === "Bad") val1 = 1
+                if (valore1 === "Really Bad") val1 = 0
             }
-          }
-    
-        filterAthletes(){
-            console.log("sono dentro la funzione")
-            //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
-            let condizioni=this.state.conditions;
-            let atleti=this.state.permanentAthletesList;
-            for(let j=0; j<atleti.length; j++){        
-                for(let i=0; i<condizioni.length; i++){
-                    let tipo=condizioni[i].type;
-                    let operatore=condizioni[i].operator;
-                    let valore1=condizioni[i].value1;
-                    let valore2=condizioni[i].value2;
-                    let link=condizioni[i].link;
-                    console.log(tipo+" "+operatore+" "+valore1+" "+valore2+" "+link);
-                    let whereToSearch="";
-                    let comparison="";
-                    // WHERE TO SEARCH
-                        //CASO 1
-                    if(tipo==="Calories Intake (All Day)"||tipo==="Calories Intake (Breakfast)"||tipo==="Calories Intake (Lunch)"||tipo==="Calories Intake (Dinner)"||tipo==="Carbs (g)"||tipo==="Fat (g)"||tipo==="Protein (g)"||tipo==="Cholesterol (mg)"||tipo==="Sodium (mg)"||tipo==="Sugars (g)"||tipo==="Fibre (g)")
-                        whereToSearch="mfp";
-                        //CASO 2
-                    if(tipo==="Mood") whereToSearch="mood";
-                        //CASO 3
-                    if(tipo==="Bed exits"||tipo==="Sleep hours"||tipo==="Sleep latency"||tipo==="Sleep awakening") whereToSearch="sleep";
-                        //CASO 4
-                    if(tipo==="Burned calories"||tipo==="Activity duration"||tipo==="Activity distance"||tipo==="Steps") whereToSearch="activity";
-                        //VEDIAMO COSA È USCITO FUORI
-                    console.log("lo switch ha dato questo risultato: "+whereToSearch)
-                    
-                    // WHAT IS THE OPERATOR?
-                    if(tipo==="equal to")           comparison="===";
-                    if(tipo==="not equal to")       comparison="!==";
-                    if(tipo==="higher than")        comparison=">";
-                    if(tipo==="lower than")         comparison="<";
-                    if(tipo==="between")            comparison="><";
-    
-                    //THE FIRST VALUE
-                    let val1=parseFloat(valore1)
-    
-                    //THE SECOND VALUE
-                    let val2=null;
-                    if(valore2!=="") val2=parseFloat(valore2)
-                    
-                    // ===> ORA VALUTO SE LA CONDIZIONE IN QUESTIONE È VERA O MENO! <=== //
-    
-                    
+
+
+            // THE SECOND VALUE
+            let val2 = null;
+            if (valore2 !== "") {
+                if (tipo === "Mood") {
+                    if (valore2 === "Really Good") val2 = 4
+                    if (valore2 === "Good") val2 = 3
+                    if (valore2 === "Normal") val2 = 2
+                    if (valore2 === "Bad") val2 = 1
+                    if (valore2 === "Really Bad") val2 = 0
+                } else {
+                    val2 = parseFloat(valore2);
                 }
             }
-        } */
 
+            // ===> ORA VALUTO SE LA CONDIZIONE IN QUESTIONE È VERA O MENO! <=== //
+
+            const condition = {
+                tipo: whereToSearch,
+                op: comparison,
+                value1: val1,
+                value2: val2
+            }
+
+            axios.post('/athletes/ask', condition)
+                .then(response => {
+                    if (this.state.conditions.length === 1) {
+                        this.setState({ askResult: response.data });
+                        return;
+                    } else if (link === "and") {
+                        /* response.data = (response.data).filter(el => el === this.state.askResult) */
+                        let filtered = [];
+                        let arrAskResult = this.state.askResult;
+                        (response.data).filter(function (newData) {
+                            return arrAskResult.filter(function (oldData) {
+                                if (newData._id === oldData._id) {
+                                    filtered.push(newData)
+                                }
+                            })
+                        });
+                        this.setState({ askResult: filtered });
+                    } else if (link === "or") {
+                        let fusion = this.state.askResult.concat(response.data);
+                        for (let i = 0; i < fusion.length; i++) {
+                            for (let n = 0; n < fusion.length; n++) {
+                                if (i !== n && fusion[i]._id === fusion[n]._id) {
+                                    fusion.splice(n, 1);
+                                    n--;
+                                }
+                            }
+                        }
+                        console.log("fusion:")
+                        console.log(fusion)
+                        this.setState({ askResult: fusion })
+                        console.log("this.state.askResult: " + this.state.askResult)
+                    }
+                })
+                .catch(err => console.log(err))
+        }
+    }
+
+    putButtonOrNot(nameAndId) {
+        console.log("ho chiamato la funzione")
+        let arr1 = this.state.firstAthletesList;
+        for (let x = 0; x < arr1.length; x++) {
+            if (arr1[x].name + " ~ " + arr1[x]._id === nameAndId) {
+                return (
+                    <input type="button"
+                        className="btn btn-outline-success ml-4"
+                        value="Add"
+                        onClick={() => { this.onAddSuggestedAthleteId(nameAndId) }} />
+                )
+            }
+        } return;
+    }
+
+    showSuggestedAthletes() {
+
+        if (this.state.conditions.length === 0) return;
+
+        if (this.state.conditions.length > 0 && this.state.askResult.length === 0) {
+            return (
+                <div className="container mt-3 py-3 text-dark rounded">
+                    <b>No Suggested Athletes</b>
+                </div>
+            )
+        }
+
+        if (this.state.askResult.length > 0) {
+            return (
+                <div>
+                    <div className="container mt-3 py-3 text-dark rounded">
+                        <b>Suggested Athletes:</b>
+                        <button type="button"
+                            className="btn btn-outline-success mt-n2 mr-3 float-right"
+                            onClick={() => { this.onAddAllSuggestedAthletesId() }}>
+                            Add All
+                        </button>
+                    </div>
+
+                    {this.state.askResult.map((currentResult, index) => {
+                        return (
+                            <div className=" bg-light p-3 mb-2" key={currentResult._id}>
+                                <em>{currentResult.name + " ~ " + currentResult._id}</em>
+                                {this.putButtonOrNot(currentResult.name + " ~ " + currentResult._id)}
+                            </div>
+                        )
+                    })
+                    }
+                </div>
+            )
+        }
+    }
 
     newConditionsList() {
         if (this.state.conditions.length === 0) {
@@ -410,9 +591,11 @@ export default class UpdateRule extends Component {
         })
     }
 
+
     /////////////////////////
     /* TEMPORAL CONDITIONS */
     /////////////////////////
+
     onChangeTemporalItem(e) {
         if (e.target.value === this.state.currentTemporalValue1) {
             this.setState({
@@ -533,6 +716,8 @@ export default class UpdateRule extends Component {
     onSubmit(e) {
         e.preventDefault();
 
+        let suggestedAthletesId = [];
+
         if (this.state.conditions.length === 0) {
             alert("Insert at least one condition!");
             return;
@@ -555,6 +740,13 @@ export default class UpdateRule extends Component {
                 athletesId[p] = athID;
             }
             this.state.athletesId = athletesId;
+
+            for (let x = 0; x < this.state.askResult.length; x++) {
+                let str = this.state.askResult[x]._id;
+                suggestedAthletesId.push(str);
+            }
+            this.state.suggestedAthletesId = suggestedAthletesId;
+
         } catch (error) {
             console.log("errore onSubmit");
         }
@@ -592,6 +784,7 @@ Do you want to automatically set name?`)) {
                 const rule = {
                     name: this.state.name,
                     athletesId: this.state.athletesId,
+                    suggestedAthletesId: this.state.suggestedAthletesId,
                     conditions: this.state.conditions,
                     temporalConditions: this.state.temporalConditions,
                     message: this.state.message
@@ -607,6 +800,7 @@ Do you want to automatically set name?`)) {
             const rule = {
                 name: this.state.name,
                 athletesId: this.state.athletesId,
+                suggestedAthletesId: this.state.suggestedAthletesId,
                 conditions: this.state.conditions,
                 temporalConditions: this.state.temporalConditions,
                 message: this.state.message
@@ -620,28 +814,30 @@ Do you want to automatically set name?`)) {
         this.controllaNomi();
     }
 
+
+    //////////////////////////////
+    /*----------RENDER----------*/
+    //////////////////////////////
+
     render() {
         return (
             <div>
                 <h3 className="mb-4">Edit rule</h3>
                 <form onSubmit={this.onSubmit}>
 
-                    <div className="h4 text-center p-3 rounded text-white bg-info">1 ~ General settings</div>
+
+                    <div className="h4 text-center mb-3 p-3 rounded text-white bg-info">1 ~ General settings</div>
                     <div className="form-group">
                         <h6><label>Rule Name</label></h6>
                         <input type="text"
-                            className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control"
+                            className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control mb-3"
                             value={this.state.name}
-                            onChange={this.onChangeName}
-                        ></input>
-                    </div>
+                            onChange={this.onChangeName} />
 
-                    <div className="form-group">
                         <h6><label>Express Athletes ID</label></h6>
                         {this.newAthletesList()}
-                        <div
-                            type="text"
-                            className="mb-2 form-inline">
+                        <div type="text"
+                            className="mb-2 form-inline mb-3">
                             <select required
                                 className="form-control col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 mr-4 mb-3 mb-sm-0"
                                 ref={this.myRef}>
@@ -661,26 +857,24 @@ Do you want to automatically set name?`)) {
                                 }
                             </select>
                             <button type="button"
-                                class="btn btn-success"
+                                className="btn btn-success"
                                 onClick={() => { this.onAddAthleteId() }}>
                                 Add
                             </button>
                             <button type="button"
-                                class="btn btn-outline-success ml-4"
+                                className="btn btn-outline-success ml-4"
                                 onClick={() => { this.onAddAllAthletesId() }}>
                                 Add All
                             </button>
                             <button type="button"
-                                class="btn btn-outline-danger ml-4"
+                                className="btn btn-outline-danger ml-4"
                                 onClick={() => { this.onRemoveAllAthletesId() }}>
                                 Remove All
                             </button>
                         </div>
-                    </div>
 
-                    <div className="form-group">
                         <h6><label>Message</label></h6>
-                        <textarea className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control"
+                        <textarea className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control mb-3"
                             id="formControlTextarea1"
                             required
                             rows="4"
@@ -689,7 +883,7 @@ Do you want to automatically set name?`)) {
                     </div>
 
 
-                    <div className="h4 text-center mt-5 p-3 rounded text-white bg-info">2 ~ Conditions</div>
+                    <div className="h4 text-center mt-5 mb-3 p-3 rounded text-white bg-info">2 ~ Conditions</div>
 
                     <div className="form-group">
                         <h6><label>Setted Conditions</label></h6>
@@ -776,17 +970,16 @@ Do you want to automatically set name?`)) {
                             </select>
 
                             <button type="button"
-                                class="btn btn-success mr-4 my-2"
+                                className="btn btn-success mr-4 my-2"
                                 onClick={() => { this.onAddCondition() }}>
                                 Add
                             </button>
                         </div>
-                        <div className="mt-3 bg-warning text-dark rounded">
-                        </div>
+                        {this.showSuggestedAthletes()}
                     </div>
 
 
-                    <div className="h4 text-center mt-5 p-3 rounded text-white bg-info">3 ~ Temporal conditions</div>
+                    <div className="h4 text-center mt-5 mb-3 p-3 rounded text-white bg-info">3 ~ Temporal conditions</div>
 
                     <div className="form-group mb-3">
                         <h6><label>Temporal Conditions</label></h6>
@@ -861,7 +1054,7 @@ Do you want to automatically set name?`)) {
                                 })}
                             </select>
                             <button type="button"
-                                class="btn btn-success mr-4 my-2"
+                                className="btn btn-success mr-4 my-2"
                                 onClick={() => { this.onAddTemporalCondition() }}>
                                 Add
                             </button>
@@ -874,6 +1067,7 @@ Do you want to automatically set name?`)) {
                             className="btn btn-primary btn-lg">
                         </input>
                     </div>
+
                 </form>
             </div>
         )
