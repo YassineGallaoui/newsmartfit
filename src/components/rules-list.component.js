@@ -33,6 +33,25 @@ const RuleBigDiv = props => (
                                             })
                                         }
                                     </ul>
+                                    <label>{
+                                        (props.rule.suggestedAthletesId.filter(el => props.rule.athletesId.indexOf(el) === -1).length) > 0 ? "Other Suggested Athletes:":"No Other Suggested Athletes"
+                                    }</label>
+                                    <ul>
+                                        {
+                                            (props.rule.suggestedAthletesId.filter(el => props.rule.athletesId.indexOf(el) === -1))
+                                                .map(currentSuggestedAthlete => {
+                                                    let name = "";
+                                                    let arr = props.athletes;
+                                                    for (let i = 0; i < arr.length; i++) {
+                                                        if (arr[i]._id === currentSuggestedAthlete)
+                                                            name = arr[i].name
+                                                    }
+                                                    
+                                                    return <li>{name + " ~ " + currentSuggestedAthlete}</li>;
+                                            })
+                                            
+                                        }
+                                    </ul>
                                 </div>
 
                                 <div className="col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-3">
