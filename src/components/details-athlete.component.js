@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Emoji from 'a11y-react-emoji'
 import Chart from "./charts.component"
@@ -46,7 +47,8 @@ export default class DetailsAthlete extends Component {
 
         this.onChangeStartDate = this.onChangeStartDate.bind(this);
         this.onChangeEndDate = this.onChangeEndDate.bind(this);
-        this.showMyRules = this.showMyRules.bind(this);
+        this.showMyRulesPartOne = this.showMyRulesPartOne.bind(this);
+        this.showMyRulesPartTwo = this.showMyRulesPartTwo.bind(this);
 
         this.state = {
             id: '',
@@ -106,46 +108,97 @@ export default class DetailsAthlete extends Component {
             })
     }
 
-    showMyRules(){
-        let firstTime=0;
+    showMyRulesPartOne() {
+        let firstTime = true;
         return this.state.rules.map(currentRule => {
-            let arr=[...currentRule.athletesId]
-            for(let i=0; i<arr.length; i++){
-                if(arr[i]===this.props.match.params.id){
-                    if(firstTime===0){
-                        document.getElementById("textMyAthleteRules").innerHTML = this.state.name +" has got the following rules:"
-                    }
-                    firstTime++;
-                    return  <div className="card mt-3 card-body" key={currentRule._id}>
-                                <mark className="h6">&gt; {currentRule.name}</mark>
-                                <div>
-                                    <label>Conditions</label>
-                                    <ul>
-                                        {
-                                            currentRule.conditions.map(currentCondition => {
-                                                return <li><b>{currentCondition.link + " "}</b>{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</li>;
-                                            })
-                                        }
-                                    </ul>
-                                    <label>Temporal Conditions</label>
-                                    <ul>
-                                        {
-                                            currentRule.temporalConditions.map(currentTemporalCondition => {
-                                                return <li><b>{currentTemporalCondition.temporalLink}</b>{` "` + currentTemporalCondition.temporalItem + `" `}<b>{currentTemporalCondition.temporalOperator}</b>{` "` + currentTemporalCondition.temporalValue1 + `" ` + (currentTemporalCondition.temporalValue2 === "" ? "" : (`and "` + currentTemporalCondition.temporalValue2 + `"`))}</li>;
-                                            })
-                                        }
-                                    </ul>
-                                    <label>Message</label><br />
-                                    <span>
-                                        {currentRule.message}
-                                    </span>
-                                </div>
-                            </div>;
+            let arr = [...currentRule.athletesId]
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] === this.props.match.params.id) {
+                    if (firstTime === true)
+                        document.getElementById("textMyAthleteRules").innerHTML = this.state.name + " has got the following rules:"
+                    firstTime = false;
+                    return <div className="card my-3 card-body" key={currentRule._id}>
+                        <mark className="h6">
+                            <Link to={"/rules/update/" + currentRule._id}>
+                                &gt; {currentRule.name}
+                            </Link>
+                        </mark>
+                        <div>
+                            <label>Conditions</label>
+                            <ul>
+                                {
+                                    currentRule.conditions.map(currentCondition => {
+                                        return <li><b>{currentCondition.link + " "}</b>{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</li>;
+                                    })
+                                }
+                            </ul>
+                            <label>Temporal Conditions</label>
+                            <ul>
+                                {
+                                    currentRule.temporalConditions.map(currentTemporalCondition => {
+                                        return <li><b>{currentTemporalCondition.temporalLink}</b>{` "` + currentTemporalCondition.temporalItem + `" `}<b>{currentTemporalCondition.temporalOperator}</b>{` "` + currentTemporalCondition.temporalValue1 + `" ` + (currentTemporalCondition.temporalValue2 === "" ? "" : (`and "` + currentTemporalCondition.temporalValue2 + `"`))}</li>;
+                                    })
+                                }
+                            </ul>
+                            <label>Message</label><br />
+                            <span>
+                                {currentRule.message}
+                            </span>
+                        </div>
+                    </div>;
                 }
             }
-            if(firstTime===0)
-                document.getElementById("textMyAthleteRules").innerHTML = this.state.name+" has got no rules."
-                
+            if (firstTime === true)
+                document.getElementById("textMyAthleteRules").innerHTML = this.state.name + " has got no rules."
+        })
+    }
+
+    showMyRulesPartTwo() {
+        return this.state.rules.map(currentRule => {
+            let firstTime = true;
+            let arr2 = [...currentRule.suggestedAthletesId];
+            arr2 = (arr2.filter(el => currentRule.athletesId.indexOf(el.substring(el.indexOf("~ ")+2)) === -1))
+            for (let i = 0; i < arr2.length; i++) {
+                if (arr2[i].substring(arr2[i].indexOf("~ ") + 2) === this.props.match.params.id) {
+                    if (firstTime === true) {
+                        document.getElementById("textMySuggestedAthleteRules").innerHTML = "Think about adding the following rules to " + this.state.name + ":"
+                    }
+                    firstTime = false;
+                    return <div className="card my-3 card-body" key={currentRule._id}>
+                        
+                        <mark className="h6">
+                            <Link to={"/rules/update/" + currentRule._id}>
+                                &gt; {currentRule.name}
+                            </Link>
+                        </mark>
+                        <div>
+                            <label>Conditions</label>
+                            <ul>
+                                {
+                                    currentRule.conditions.map(currentCondition => {
+                                        return <li><b>{currentCondition.link + " "}</b>{currentCondition.type + " is " + currentCondition.operator + " " + currentCondition.value1 + (currentCondition.value2 === "" ? "" : (" and " + currentCondition.value2))}</li>;
+                                    })
+                                }
+                            </ul>
+                            <label>Temporal Conditions</label>
+                            <ul>
+                                {
+                                    currentRule.temporalConditions.map(currentTemporalCondition => {
+                                        return <li><b>{currentTemporalCondition.temporalLink}</b>{` "` + currentTemporalCondition.temporalItem + `" `}<b>{currentTemporalCondition.temporalOperator}</b>{` "` + currentTemporalCondition.temporalValue1 + `" ` + (currentTemporalCondition.temporalValue2 === "" ? "" : (`and "` + currentTemporalCondition.temporalValue2 + `"`))}</li>;
+                                    })
+                                }
+                            </ul>
+                            <label>Message</label><br />
+                            <span>
+                                {currentRule.message}
+                            </span>
+                        </div>
+                    </div>;
+                }
+            }
+            if (firstTime === true)
+                document.getElementById("textMySuggestedAthleteRules").innerHTML = "No suggested rules for " + this.state.name
+
         })
     }
 
@@ -338,8 +391,10 @@ export default class DetailsAthlete extends Component {
                             <div className="content" id="contentDetailsRules">
                                 <div className="card-body">
                                     <p className="card-text">
-                                        <div id="textMyAthleteRules"></div>
-                                        {this.showMyRules()}
+                                        <div id="textMyAthleteRules"></div>                                        
+                                        {this.showMyRulesPartOne()}
+                                        <div id="textMySuggestedAthleteRules"></div>
+                                        {this.showMyRulesPartTwo()}
                                     </p>
                                 </div>
                             </div>

@@ -343,7 +343,7 @@ export default class AddRule extends Component {
     }
 
     ///////////////////////
-    /* ASK TO DATABASE */
+    //* ASK TO DATABASE *//
     ///////////////////////
 
     componentDidUpdate(prevProps, prevState) {
@@ -465,10 +465,7 @@ export default class AddRule extends Component {
                                 }
                             }
                         }
-                        console.log("fusion:")
-                        console.log(fusion)
                         this.setState({ askResult: fusion })
-                        console.log("this.state.askResult: " + this.state.askResult)
                     }
                 })
                 .catch(err => console.log(err))
@@ -513,7 +510,7 @@ export default class AddRule extends Component {
                             Add All
                         </button>
                     </div>
-                    
+
                     {this.state.askResult.map((currentResult, index) => {
                         return (
                             <div className=" bg-light p-3 mb-2" key={currentResult._id}>
@@ -709,8 +706,8 @@ export default class AddRule extends Component {
             }
             this.state.athletesId = athletesId;
 
-            
-            for(let x=0; x<this.state.askResult.length; x++) {
+
+            for (let x = 0; x < this.state.askResult.length; x++) {
                 let str = this.state.askResult[x].name + " ~ " + this.state.askResult[x]._id;
                 suggestedAthletesId.push(str);
             }
@@ -794,13 +791,14 @@ Do you want to automatically set name?`)) {
                 <h3 className="mb-4">Create new rule</h3>
                 <form onSubmit={this.onSubmit}>
 
+
                     <div className="h4 text-center mb-3 p-3 rounded text-white bg-info">1 ~ General settings</div>
                     <div className="form-group">
                         <h6><label>Rule Name</label></h6>
                         <input type="text"
                             className="col-sm-12 col-md-12 col-lg-12 col-xl-12 form-control mb-3"
                             value={this.state.name}
-                            onChange={this.onChangeName}/>
+                            onChange={this.onChangeName} />
 
                         <h6><label>Express Athletes ID</label></h6>
                         {this.newAthletesList()}

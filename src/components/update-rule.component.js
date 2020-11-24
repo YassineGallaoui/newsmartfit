@@ -70,7 +70,7 @@ export default class UpdateRule extends Component {
             .then(response => {
                 this.setState({
                     athletesId: response.data.athletesId,
-                    suggestedAthletesId: response.data.suggestedAthletesId,
+                    /* suggestedAthletesId: response.data.suggestedAthletesId, */
                     name: response.data.name,
                     message: response.data.message,
                     conditions: response.data.conditions,
@@ -173,7 +173,7 @@ export default class UpdateRule extends Component {
         var arrAthletesAskResult = [...this.state.askResult];
         var arrAthletesId = [...this.state.athletesId];
         while (arrAthletesAskResult.length > 0) {
-            let str = arrAthletesAskResult[0];
+            let str = arrAthletesAskResult[0].name + " ~ " + arrAthletesAskResult[0]._id;
             console.log(str)
             let trovato = false;
             for (let x = 0; x < arrAthletesId.length; x++) {
@@ -741,8 +741,9 @@ export default class UpdateRule extends Component {
             }
             this.state.athletesId = athletesId;
 
+
             for (let x = 0; x < this.state.askResult.length; x++) {
-                let str = this.state.askResult[x]._id;
+                let str = this.state.askResult[x].name + " ~ " + this.state.askResult[x]._id;
                 suggestedAthletesId.push(str);
             }
             this.state.suggestedAthletesId = suggestedAthletesId;
@@ -1060,6 +1061,7 @@ Do you want to automatically set name?`)) {
                             </button>
                         </div>
                     </div>
+
 
                     <div className="my-4 text-center">
                         <input type="submit"
