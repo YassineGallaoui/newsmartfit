@@ -339,7 +339,6 @@ export default class AddRule extends Component {
                 this.setState({ conditions: conditionsCopy });
             }
         }
-        this.filterAthletes();
     }
 
     ///////////////////////
@@ -353,6 +352,7 @@ export default class AddRule extends Component {
     }
 
     filterAthletes() {
+        console.log("filteraAthletes è stata chiamata")
         //QUA CERCO DI CAPIRE QUALI ATLETI RIENTRANO NELLE CONDIZIONI RICHIESTE.
         let condizioni = this.state.conditions;
 
@@ -369,6 +369,8 @@ export default class AddRule extends Component {
             let link = condizioni[p].link;
             let whereToSearch = "";
             let comparison = "";
+            if(p === 0) link="";
+
             // WHERE TO SEARCH
             //CASO 1
             if (tipo === "Calories Intake (Breakfast)") whereToSearch = "mfp.CaloriesBreakfast";
@@ -430,7 +432,7 @@ export default class AddRule extends Component {
             }
 
             // ===> ORA VALUTO SE LA CONDIZIONE IN QUESTIONE È VERA O MENO! <=== //
-
+            console.log("condizione in esame: "+tipo+" + "+comparison+" + "+val1)
             const condition = {
                 tipo: whereToSearch,
                 op: comparison,
@@ -440,8 +442,9 @@ export default class AddRule extends Component {
 
             axios.post('/athletes/ask', condition)
                 .then(response => {
-                    if (this.state.conditions.length === 1) {
+                    if (this.state.conditions.length === 1 || link === "") {
                         this.setState({ askResult: response.data });
+                        console.log("conditions === 1 e link = "+link)
                         return;
                     } else if (link === "and") {
                         /* response.data = (response.data).filter(el => el === this.state.askResult) */
@@ -455,6 +458,7 @@ export default class AddRule extends Component {
                             })
                         });
                         this.setState({ askResult: filtered });
+                        console.log("link = "+link)
                     } else if (link === "or") {
                         let fusion = this.state.askResult.concat(response.data);
                         for (let i = 0; i < fusion.length; i++) {
@@ -466,6 +470,7 @@ export default class AddRule extends Component {
                             }
                         }
                         this.setState({ askResult: fusion })
+                        console.log("link = "+link)
                     }
                 })
                 .catch(err => console.log(err))
@@ -473,7 +478,6 @@ export default class AddRule extends Component {
     }
 
     putButtonOrNot(nameAndId) {
-        console.log("ho chiamato la funzione")
         let arr1 = this.state.firstAthletesList;
         for (let x = 0; x < arr1.length; x++) {
             if (arr1[x].name + " ~ " + arr1[x]._id === nameAndId) {
