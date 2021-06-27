@@ -33,7 +33,6 @@ app.use('/athletes', athleteRouter);
 app.use('/rules', rulesRouter);
 app.use('*', function (request, response){
     response.sendFile(path.resolve(buildPath, 'index.html'))
-    console.log("sono entrato dentro la funzione speciale!!")
   })
 
   
