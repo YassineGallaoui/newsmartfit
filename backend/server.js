@@ -1,5 +1,4 @@
 const path = require('path');
-const axios = require('axios');
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
