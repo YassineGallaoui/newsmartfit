@@ -22,7 +22,7 @@ export default class AthletesList extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:5000/athletes/')
+        axios.get('/athletes/')
             .then(response => {
                 this.setState({ athletes: response.data })
             })
