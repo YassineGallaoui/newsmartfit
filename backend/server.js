@@ -30,7 +30,7 @@ const athleteRouter = require('./routes/athletes'); //DEFINISCO QUALE È LA SORG
 const rulesRouter = require('./routes/rules'); //DEFINISCO QUALE È LA SORGENTE DEL ROUTER DELLA SEZIONE RULES
 app.use('/athletes', athleteRouter);
 app.use('/rules', rulesRouter);
-app.use('*', function (request, response){
+app.get('*', function (request, response){
     response.sendFile(path.resolve(buildPath, 'index.html'))
   })
 
