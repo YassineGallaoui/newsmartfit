@@ -5,10 +5,10 @@ let Athlete = require('../models/athlet.model');
 //WARNING: L'ORDINE DELLE CHIAMATE È FONDAMENTALE! LASCIARE QUELLE CON :ID ALLA FINE.
 
 //QUANDO VOGLIO VISUALIZZARE LA LISTA DI ATLETI
-router.route('/').get((req, res) => {
+router.route('/').get((req, res) => {    
     Athlete.find()
     .then(athlete => res.json(athlete))
-    .catch(err => res.status(400).json('Error: '+err));
+    .catch(err => {res.status(400).json('Error: '+err); console.log('richiesta fatta')});
 })
 
 router.route('/ask').post((req, res) => {
